@@ -1,81 +1,112 @@
-import React, { useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useScrollAnimation } from '../hooks/use-scroll-animation.jsx';
+import React, { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Code2,
+  Palette,
+  Database,
+  Globe,
+  Server,
+  Smartphone,
+  Sparkles,
+  Zap,
+} from "lucide-react";
+import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
 
 export default function SkillsSection() {
   const { ref, isVisible } = useScrollAnimation();
+  const [activeCategory, setActiveCategory] = useState("frontend");
   const skillsRef = useRef(null);
 
-  const skillCategories = [
-    {
-      title: "Frontend",
-      icon: "💻",
+  const skillCategories = {
+    frontend: {
+      title: "Frontend Development",
+      icon: Globe,
+      color: "from-accent/20 to-accent-secondary/20",
       skills: [
-        { name: "React", icon: "⚛️" },
-        { name: "Next.js", icon: "🔗" },
-        { name: "TypeScript", icon: "🔷" },
-        { name: "JavaScript", icon: "🟨" },
-        { name: "Tailwind", icon: "🎨" },
-        { name: "HTML/CSS", icon: "🌐" }
-      ]
+        { name: "React", level: 95, icon: "⚛️" },
+        { name: "Next.js", level: 90, icon: "🔥" },
+        { name: "TypeScript", level: 88, icon: "📘" },
+        { name: "Tailwind CSS", level: 92, icon: "🎨" },
+        { name: "Three.js", level: 85, icon: "🎮" },
+        { name: "Framer Motion", level: 87, icon: "✨" },
+      ],
     },
-    {
-      title: "Backend",
-      icon: "🛠️",
+    backend: {
+      title: "Backend Development",
+      icon: Server,
+      color: "from-accent-secondary/20 to-accent/20",
       skills: [
-        { name: "Node.js", icon: "🟢" },
-        { name: "Express", icon: "🚀" },
-        { name: "PostgreSQL", icon: "🐘" },
-        { name: "MongoDB", icon: "🍃" },
-        { name: "Prisma", icon: "🔺" },
-        { name: "REST APIs", icon: "🔌" }
-      ]
+        { name: "Node.js", level: 85, icon: "🟢" },
+        { name: "Express.js", level: 82, icon: "🚀" },
+        { name: "PostgreSQL", level: 80, icon: "🐘" },
+        { name: "MongoDB", level: 78, icon: "🍃" },
+        { name: "GraphQL", level: 75, icon: "📊" },
+        { name: "REST APIs", level: 88, icon: "🔌" },
+      ],
     },
-    {
-      title: "Tools & Design",
-      icon: "🎯",
+    design: {
+      title: "Design & Tools",
+      icon: Palette,
+      color: "from-accent/20 to-accent-secondary/20",
       skills: [
-        { name: "Three.js", icon: "🎮" },
-        { name: "Figma", icon: "🎨" },
-        { name: "Git", icon: "📦" },
-        { name: "Docker", icon: "🐳" },
-        { name: "Framer Motion", icon: "✨" },
-        { name: "Blender", icon: "🎲" }
-      ]
-    }
-  ];
+        { name: "Figma", level: 90, icon: "🎯" },
+        { name: "Adobe XD", level: 85, icon: "🔷" },
+        { name: "Photoshop", level: 80, icon: "🖼️" },
+        { name: "Blender", level: 75, icon: "🎭" },
+        { name: "UI/UX Design", level: 88, icon: "✨" },
+        { name: "Prototyping", level: 87, icon: "🔧" },
+      ],
+    },
+    mobile: {
+      title: "Mobile & Other",
+      icon: Smartphone,
+      color: "from-accent-secondary/20 to-accent/20",
+      skills: [
+        { name: "React Native", level: 80, icon: "📱" },
+        { name: "Flutter", level: 70, icon: "🦋" },
+        { name: "Git & GitHub", level: 92, icon: "🐙" },
+        { name: "Docker", level: 75, icon: "🐳" },
+        { name: "AWS", level: 72, icon: "☁️" },
+        { name: "Linux", level: 85, icon: "🐧" },
+      ],
+    },
+  };
 
-  const skillLevels = [
-    { name: "React/Next.js", level: 95, color: "from-blue-500 to-blue-600" },
-    { name: "TypeScript", level: 90, color: "from-blue-600 to-blue-700" },
-    { name: "Tailwind CSS", level: 92, color: "from-teal-500 to-teal-600" },
-    { name: "Three.js/WebGL", level: 85, color: "from-green-500 to-green-600" },
-    { name: "Node.js", level: 88, color: "from-green-600 to-green-700" },
-    { name: "UI/UX Design", level: 80, color: "from-purple-500 to-purple-600" }
+  const otherSkills = [
+    { name: "Machine Learning", icon: "🤖" },
+    { name: "Blockchain", icon: "⛓️" },
+    { name: "AR/VR", icon: "🥽" },
+    { name: "DevOps", icon: "🚀" },
+    { name: "Cybersecurity", icon: "🔐" },
+    { name: "Game Development", icon: "🎮" },
   ];
 
   useEffect(() => {
     if (isVisible && skillsRef.current) {
-      const skillFills = skillsRef.current.querySelectorAll('.skills-fill');
-      skillFills.forEach((fill, index) => {
-        const level = skillLevels[index].level;
-        setTimeout(() => {
-          fill.style.transform = `scaleX(${level / 100})`;
-        }, 200 + index * 100);
+      const skillBars = skillsRef.current.querySelectorAll(".skill-bar");
+      skillBars.forEach((bar, index) => {
+        const skillLevel = skillCategories[activeCategory].skills[index].level;
+        const fillElement = bar.querySelector(".skills-fill");
+        if (fillElement) {
+          setTimeout(() => {
+            fillElement.style.transform = `scaleX(${skillLevel / 100})`;
+          }, index * 100);
+        }
       });
     }
-  }, [isVisible, skillLevels]);
+  }, [isVisible, activeCategory]);
 
   return (
     <section id="skills" className="py-20 relative overflow-hidden">
       <div className="parallax-bg" />
-      
+
       {/* Enhanced floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-20 right-20 w-36 h-36 bg-accent/5 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-20 left-20 w-28 h-28 bg-blue-500/5 rounded-full blur-2xl" />
+        <div className="floating-element-slow absolute top-20 right-20 w-40 h-40 bg-accent/8 rounded-full blur-3xl" />
+        <div className="floating-element-fast absolute bottom-20 left-20 w-48 h-48 bg-accent-secondary/8 rounded-full blur-3xl" />
+        <div className="floating-element absolute top-1/3 left-1/3 w-28 h-28 bg-gradient-to-r from-accent/10 to-accent-secondary/10 rounded-full blur-xl" />
       </div>
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -83,131 +114,134 @@ export default function SkillsSection() {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <motion.h2 
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="flex items-center justify-center mb-6"
+          >
+            <Zap className="w-6 h-6 text-accent mr-3 animate-pulse" />
+            <span className="text-lg font-medium text-accent">
+              My technical expertise
+            </span>
+            <Zap className="w-6 h-6 text-accent ml-3 animate-pulse" />
+          </motion.div>
+
+          <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl font-bold font-space gradient-text mb-4 text-shadow-glow"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space gradient-text mb-6 text-shadow-glow"
           >
-            Skills & Tools
+            Skills & Expertise
           </motion.h2>
-          <motion.p 
+          <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl text-muted-foreground max-w-3xl mx-auto"
+            className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed"
           >
-            Technologies and tools I use to bring ideas to life.
+            Constantly learning and mastering{" "}
+            <span className="text-accent font-semibold">
+              cutting-edge technologies
+            </span>{" "}
+            to build{" "}
+            <span className="gradient-text-secondary font-semibold">
+              exceptional digital experiences
+            </span>
+            .
           </motion.p>
         </motion.div>
-        
-        {/* Skills Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {skillCategories.map((category, index) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 50 }}
-              animate={isVisible ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
-              className="glow-border rounded-2xl p-6 hover-lift"
+
+        {/* Enhanced Category Navigation */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={isVisible ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-4 mb-16"
+        >
+          {Object.entries(skillCategories).map(([key, category], index) => (
+            <motion.button
+              key={key}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={isVisible ? { opacity: 1, scale: 1 } : {}}
+              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+              onClick={() => setActiveCategory(key)}
+              className={`px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 hover-lift ${
+                activeCategory === key
+                  ? "bg-gradient-to-r from-accent/30 to-accent-secondary/30 text-accent border border-accent/50 shadow-lg"
+                  : "bg-background/50 text-muted-foreground hover:text-accent hover:bg-accent/10 border border-accent/20"
+              }`}
             >
-              <div className="flex items-center mb-6">
-                <div className="text-3xl mr-3">{category.icon}</div>
-                <h3 className="text-2xl font-bold font-space text-accent">{category.title}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {category.skills.map((skill, skillIndex) => (
-                  <motion.div
-                    key={skill.name}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.5, delay: (index * 0.2) + (skillIndex * 0.1) }}
-                    className="text-center p-3 rounded-lg hover:bg-accent/10 transition-all duration-300 cursor-pointer group magnetic-effect"
-                  >
-                    <div className="text-3xl mb-2 transform group-hover:scale-110 transition-transform duration-300">
-                      {skill.icon}
-                    </div>
-                    <p className="text-sm font-medium text-foreground group-hover:text-accent transition-colors duration-300">
-                      {skill.name}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
+              <category.icon className="w-5 h-5" />
+              <span>{category.title}</span>
+            </motion.button>
           ))}
-        </div>
-        
-        {/* Enhanced Skill Bars */}
+        </motion.div>
+
+        {/* Enhanced Skills Display */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="glow-border rounded-2xl p-8 hover-lift"
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="glow-border rounded-3xl p-10 mb-16 bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
           ref={skillsRef}
         >
-          <h3 className="text-2xl font-bold font-space text-accent mb-8 text-center flex items-center justify-center">
-            <span className="text-3xl mr-3">📊</span>
-            Proficiency Levels
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {skillLevels.map((skill, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {skillCategories[activeCategory].skills.map((skill, index) => (
               <motion.div
                 key={skill.name}
-                initial={{ opacity: 0, x: -50 }}
+                initial={{ opacity: 0, x: -30 }}
                 animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.8 + (index * 0.1) }}
-                className="group"
+                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+                className="space-y-4"
               >
-                <div className="flex justify-between items-center mb-3">
-                  <span className="text-foreground font-medium group-hover:text-accent transition-colors duration-300">
-                    {skill.name}
-                  </span>
-                  <span className="text-accent font-bold text-lg">{skill.level}%</span>
-                </div>
-                <div className="relative">
-                  <div className="skills-bar bg-muted/20 rounded-full h-3 overflow-hidden">
-                    <div 
-                      className="skills-fill h-full rounded-full transition-all duration-1000 ease-out"
-                      style={{ 
-                        transform: 'scaleX(0)',
-                        background: `linear-gradient(90deg, hsl(348, 83%, 47%), hsl(217, 67%, 22%))`
-                      }}
-                    />
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{skill.icon}</span>
+                    <h4 className="text-lg font-semibold text-foreground">
+                      {skill.name}
+                    </h4>
                   </div>
-                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full" />
+                  <span className="text-accent font-bold text-lg">
+                    {skill.level}%
+                  </span>
+                </div>
+                <div className="skill-bar skills-bar relative">
+                  <div
+                    className="skills-fill absolute top-0 left-0 h-full bg-gradient-to-r from-accent to-accent-secondary rounded-xl transform origin-left scale-x-0 transition-transform duration-1000 ease-out"
+                    style={{ width: "100%" }}
+                  />
                 </div>
               </motion.div>
             ))}
           </div>
         </motion.div>
-        
-        {/* Additional Skills Section */}
+
+        {/* Enhanced Other Skills */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 1.0 }}
-          className="mt-16 text-center"
+          transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h3 className="text-2xl font-bold font-space text-accent mb-6">Currently Learning</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {[
-              { name: "AI/ML", icon: "🤖" },
-              { name: "Blockchain", icon: "⛓️" },
-              { name: "AR/VR", icon: "🥽" },
-              { name: "Mobile Dev", icon: "📱" },
-              { name: "DevOps", icon: "🚀" },
-              { name: "Cybersecurity", icon: "🔐" }
-            ].map((skill, index) => (
+          <h3 className="text-3xl font-bold font-space text-center mb-12 gradient-text-secondary">
+            Currently Exploring
+          </h3>
+
+          <div className="flex flex-wrap justify-center gap-6">
+            {otherSkills.map((skill, index) => (
               <motion.div
                 key={skill.name}
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isVisible ? { opacity: 1, scale: 1 } : {}}
-                transition={{ duration: 0.5, delay: 1.2 + index * 0.1 }}
-                className="glass-effect rounded-full px-6 py-3 hover-lift magnetic-effect"
+                transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                className="glass-effect rounded-full px-8 py-4 hover-lift magnetic-effect bg-gradient-to-r from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
               >
-                <div className="flex items-center space-x-2">
-                  <span className="text-xl">{skill.icon}</span>
-                  <span className="text-sm font-medium text-foreground">{skill.name}</span>
+                <div className="flex items-center space-x-3">
+                  <span className="text-2xl">{skill.icon}</span>
+                  <span className="text-base font-medium text-foreground">
+                    {skill.name}
+                  </span>
                 </div>
               </motion.div>
             ))}

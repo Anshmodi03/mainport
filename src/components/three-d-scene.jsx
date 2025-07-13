@@ -31,7 +31,7 @@ export default function ThreeDScene() {
     sceneRef.current = scene;
     rendererRef.current = renderer;
 
-    // Create particles
+    // Create particles with new color palette
     const particlesGeometry = new THREE.BufferGeometry();
     const particlesCount = 1000;
     const posArray = new Float32Array(particlesCount * 3);
@@ -47,9 +47,9 @@ export default function ThreeDScene() {
 
     const particlesMaterial = new THREE.PointsMaterial({
       size: 0.8,
-      color: 0xe94560,
+      color: 0x00d4ff, // Updated to accent color
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.6,
       blending: THREE.AdditiveBlending,
     });
 
@@ -59,29 +59,29 @@ export default function ThreeDScene() {
     );
     scene.add(particlesMesh);
 
-    // Create geometric shapes
+    // Create geometric shapes with updated color palette
     const shapes = [];
 
-    // Torus
+    // Torus with primary accent color
     const torusGeometry = new THREE.TorusGeometry(10, 3, 16, 100);
     const torusMaterial = new THREE.MeshBasicMaterial({
-      color: 0xe94560,
+      color: 0x00d4ff, // Accent color
       wireframe: true,
       transparent: true,
-      opacity: 0.3,
+      opacity: 0.4,
     });
     const torus = new THREE.Mesh(torusGeometry, torusMaterial);
     torus.position.set(-30, 0, -50);
     scene.add(torus);
     shapes.push(torus);
 
-    // Icosahedron
+    // Icosahedron with secondary accent color
     const icosahedronGeometry = new THREE.IcosahedronGeometry(8, 1);
     const icosahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x6b7280,
+      color: 0x7c3aed, // Accent secondary color
       wireframe: true,
       transparent: true,
-      opacity: 0.4,
+      opacity: 0.5,
     });
     const icosahedron = new THREE.Mesh(
       icosahedronGeometry,
@@ -91,10 +91,10 @@ export default function ThreeDScene() {
     scene.add(icosahedron);
     shapes.push(icosahedron);
 
-    // Octahedron
+    // Octahedron with muted foreground
     const octahedronGeometry = new THREE.OctahedronGeometry(6, 2);
     const octahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x9ca3af,
+      color: 0x94a3b8, // Muted foreground color
       wireframe: true,
       transparent: true,
       opacity: 0.3,
@@ -104,13 +104,13 @@ export default function ThreeDScene() {
     scene.add(octahedron);
     shapes.push(octahedron);
 
-    // Dodecahedron
+    // Dodecahedron with gradient-like mixed color
     const dodecahedronGeometry = new THREE.DodecahedronGeometry(5, 1);
     const dodecahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0xe94560,
+      color: 0x8b5cf6, // Mix of accent and accent-secondary
       wireframe: true,
       transparent: true,
-      opacity: 0.2,
+      opacity: 0.4,
     });
     const dodecahedron = new THREE.Mesh(
       dodecahedronGeometry,
@@ -119,6 +119,36 @@ export default function ThreeDScene() {
     dodecahedron.position.set(-15, 30, -70);
     scene.add(dodecahedron);
     shapes.push(dodecahedron);
+
+    // Add additional geometric shapes for more visual interest
+    // Sphere with accent color
+    const sphereGeometry = new THREE.SphereGeometry(4, 16, 16);
+    const sphereMaterial = new THREE.MeshBasicMaterial({
+      color: 0x00d4ff,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.3,
+    });
+    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    sphere.position.set(40, -10, -45);
+    scene.add(sphere);
+    shapes.push(sphere);
+
+    // Tetrahedron with secondary accent
+    const tetrahedronGeometry = new THREE.TetrahedronGeometry(6, 0);
+    const tetrahedronMaterial = new THREE.MeshBasicMaterial({
+      color: 0x7c3aed,
+      wireframe: true,
+      transparent: true,
+      opacity: 0.4,
+    });
+    const tetrahedron = new THREE.Mesh(
+      tetrahedronGeometry,
+      tetrahedronMaterial
+    );
+    tetrahedron.position.set(-40, -15, -55);
+    scene.add(tetrahedron);
+    shapes.push(tetrahedron);
 
     // Camera position
     camera.position.z = 30;
@@ -149,17 +179,23 @@ export default function ThreeDScene() {
         particlesMesh.rotation.y += 0.002;
       }
 
-      // Rotate shapes
+      // Rotate shapes with varying speeds
       shapes.forEach((shape, index) => {
         shape.rotation.x += 0.005 + index * 0.002;
         shape.rotation.y += 0.003 + index * 0.001;
         shape.rotation.z += 0.002;
 
-        // Add floating animation
+        // Add floating animation with different patterns
         shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.01;
+
+        // Add subtle pulsing effect to materials
+        if (shape.material.opacity) {
+          shape.material.opacity =
+            0.3 + Math.sin(Date.now() * 0.002 + index) * 0.2;
+        }
       });
 
-      // Camera follows mouse
+      // Camera follows mouse with smooth interpolation
       camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
       camera.position.y += (mouseY * 5 - camera.position.y) * 0.05;
       camera.lookAt(scene.position);
@@ -210,7 +246,7 @@ export default function ThreeDScene() {
       className="fixed inset-0 -z-10 opacity-60"
       style={{
         background:
-          "radial-gradient(circle at 50% 50%, rgba(233, 69, 96, 0.1) 0%, transparent 50%)",
+          "radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.08) 0%, rgba(124, 58, 237, 0.05) 50%, transparent 70%)",
         pointerEvents: "none",
       }}
     />
