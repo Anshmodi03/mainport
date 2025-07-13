@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  ChevronDown,
-  Github,
-  Linkedin,
-  Mail,
-  Download,
-  Play,
-} from "lucide-react";
+import { MoveDown, Github, Linkedin, Mail, Download, Play } from "lucide-react";
 import { useTypingAnimation } from "../hooks/use-typing-animation.jsx";
 import { Button } from "./ui/button.jsx";
 
@@ -159,8 +152,8 @@ export default function HeroSection() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.2 }}
-            className="flex items-center justify-center space-x-6"
+            transition={{ duration: 0.8, delay: 1.4 }}
+            className="flex items-center justify-center space-x-6 mt-8"
           >
             {[
               {
@@ -193,7 +186,7 @@ export default function HeroSection() {
                 className="group relative"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 1.3 + index * 0.1 }}
+                transition={{ duration: 0.5, delay: 1.5 + index * 0.1 }}
               >
                 <div className="w-12 h-12 bg-accent/20 rounded-full flex items-center justify-center text-muted-foreground group-hover:text-accent transition-all duration-300 group-hover:bg-accent/30 magnetic-effect">
                   <social.icon className="w-6 h-6" />
@@ -205,27 +198,35 @@ export default function HeroSection() {
             ))}
           </motion.div>
         </motion.div>
+      </div>
 
-        {/* Scroll indicator */}
+      {/* Scroll indicator - Bottom Right */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 1.2 }}
+        className="fixed bottom-8 right-8 z-20 pointer-events-auto"
+        onClick={() => scrollToSection("about")}
+      >
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 cursor-pointer"
-          onClick={() => scrollToSection("about")}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
+          className="group cursor-pointer"
         >
-          <div className="flex flex-col items-center space-y-2 text-muted-foreground hover:text-accent transition-colors duration-300">
-            <span className="text-sm font-medium">Scroll down</span>
+          <div className="relative">
             <motion.div
               animate={{ y: [0, 10, 0] }}
               transition={{ duration: 1.5, repeat: Infinity }}
-              className="w-6 h-6 border-2 border-current rounded-full flex items-center justify-center"
+              className="w-12 h-12 bg-accent/20 backdrop-blur-sm rounded-full flex items-center justify-center text-muted-foreground group-hover:text-accent group-hover:bg-accent/30 transition-all duration-300 border border-accent/30"
             >
-              <ChevronDown className="w-4 h-4" />
+              <MoveDown className="w-6 h-6" />
             </motion.div>
+            <span className="absolute -left-20 top-1/2 transform -translate-y-1/2 text-sm font-medium text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+              Scroll down
+            </span>
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
