@@ -1,22 +1,89 @@
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
-  Github,
   ExternalLink,
+  Github,
+  Zap,
+  Play,
   Star,
+  TrendingUp,
   Calendar,
   Users,
-  TrendingUp,
   Sparkles,
-  Zap,
 } from "lucide-react";
+import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
 import { Button } from "./ui/button.jsx";
 import { Badge } from "./ui/badge.jsx";
-import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ProjectsSection() {
-  const { ref, isVisible } = useScrollAnimation();
-  const [hoveredProject, setHoveredProject] = useState(null);
+  const { ref, isVisible } = useScrollAnimation(0.1);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const projectCardsRef = useRef([]);
+  const projectImageRef = useRef([]);
+
+  useEffect(() => {
+    // 3D tilt effect on project cards
+    projectCardsRef.current.forEach((card, index) => {
+      if (card) {
+        card.addEventListener("mousemove", (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          const rotateX = (y - centerY) / 10;
+          const rotateY = (centerX - x) / 10;
+
+          gsap.to(card, {
+            rotationX: rotateX,
+            rotationY: rotateY,
+            transformPerspective: 1000,
+            duration: 0.3,
+            ease: "power2.out",
+          });
+        });
+
+        card.addEventListener("mouseleave", () => {
+          gsap.to(card, {
+            rotationX: 0,
+            rotationY: 0,
+            duration: 0.5,
+            ease: "back.out(1.7)",
+          });
+        });
+
+        // Image reveal animation
+        const img = projectImageRef.current[index];
+        if (img) {
+          ScrollTrigger.create({
+            trigger: card,
+            start: "top 85%",
+            onEnter: () => {
+              gsap.fromTo(
+                img,
+                {
+                  clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)",
+                },
+                {
+                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+                  duration: 1.5,
+                  ease: "power2.out",
+                }
+              );
+            },
+          });
+        }
+      }
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
 
   const projects = [
     {
@@ -135,6 +202,7 @@ export default function ProjectsSection() {
           {projects.map((project, index) => (
             <motion.div
               key={project.title}
+              ref={(el) => (projectCardsRef.current[index] = el)}
               initial={{ opacity: 0, y: 50 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
@@ -146,6 +214,7 @@ export default function ProjectsSection() {
                 <img
                   src={project.image}
                   alt={project.title}
+                  ref={(el) => (projectImageRef.current[index] = el)}
                   className="w-full h-56 object-cover transition-transform duration-700 hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/50 to-transparent" />

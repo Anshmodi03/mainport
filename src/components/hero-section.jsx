@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   MoveDown,
   Github,
@@ -12,8 +14,15 @@ import {
 import { useTypingAnimation } from "../hooks/use-typing-animation.jsx";
 import { Button } from "./ui/button.jsx";
 
+gsap.registerPlugin(ScrollTrigger);
+
 export default function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const heroRef = useRef(null);
+  const titleRef = useRef(null);
+  const subtitleRef = useRef(null);
+  const ctaRef = useRef(null);
+  const particlesRef = useRef([]);
 
   const titles = [
     "Full Stack Developer",
@@ -37,8 +46,65 @@ export default function HeroSection() {
 
     window.addEventListener("mousemove", handleMouseMove);
 
+    // Complex GSAP animations
+    const tl = gsap.timeline();
+
+    // Magnetic effect for CTA buttons
+    const buttons = ctaRef.current?.querySelectorAll("button, a");
+    buttons?.forEach((button) => {
+      button.addEventListener("mouseenter", () => {
+        gsap.to(button, {
+          scale: 1.05,
+          duration: 0.3,
+          ease: "back.out(1.7)",
+        });
+      });
+
+      button.addEventListener("mouseleave", () => {
+        gsap.to(button, {
+          scale: 1,
+          duration: 0.3,
+          ease: "back.out(1.7)",
+        });
+      });
+    });
+
+    // Parallax scrolling effect
+    ScrollTrigger.create({
+      trigger: heroRef.current,
+      start: "top top",
+      end: "bottom top",
+      scrub: 1,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        gsap.set(titleRef.current, {
+          y: progress * 100,
+          opacity: 1 - progress * 0.5,
+        });
+        gsap.set(subtitleRef.current, {
+          y: progress * 150,
+          opacity: 1 - progress * 0.3,
+        });
+      },
+    });
+
+    // Floating particles animation
+    particlesRef.current.forEach((particle, i) => {
+      gsap.to(particle, {
+        y: `random(-100, 100)`,
+        x: `random(-100, 100)`,
+        rotation: `random(0, 360)`,
+        duration: `random(3, 6)`,
+        repeat: -1,
+        yoyo: true,
+        ease: "none",
+        delay: i * 0.1,
+      });
+    });
+
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 
@@ -56,6 +122,7 @@ export default function HeroSection() {
   return (
     <section
       id="home"
+      ref={heroRef}
       className="min-h-screen flex items-center justify-center relative overflow-hidden z-10 px-4 sm:px-6 lg:px-8"
     >
       {/* Enhanced background gradient */}
@@ -80,10 +147,26 @@ export default function HeroSection() {
           }}
         />
 
-        {/* Enhanced floating elements */}
-        <div className="floating-element absolute top-10 right-10 w-24 h-24 bg-accent/20 rounded-full blur-xl pulse-glow" />
-        <div className="floating-element-slow absolute bottom-10 left-10 w-20 h-20 bg-accent-secondary/20 morphing-shape blur-xl" />
-        <div className="floating-element-fast absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 bg-accent/15 rounded-full blur-xl wave-animation" />
+        {/* Enhanced floating elements with GSAP */}
+        {[...Array(12)].map((_, i) => (
+          <div
+            key={i}
+            ref={(el) => (particlesRef.current[i] = el)}
+            className={`absolute w-${4 + (i % 3) * 2} h-${
+              4 + (i % 3) * 2
+            } bg-gradient-to-r ${
+              i % 3 === 0
+                ? "from-accent/30 to-accent-secondary/20"
+                : i % 3 === 1
+                ? "from-accent-secondary/25 to-accent/15"
+                : "from-accent/20 to-accent-secondary/30"
+            } rounded-full blur-xl`}
+            style={{
+              left: `${10 + (i % 4) * 20}%`,
+              top: `${10 + (i % 3) * 25}%`,
+            }}
+          />
+        ))}
 
         {/* Additional decorative elements */}
         <div className="floating-element absolute top-20 left-20 w-16 h-16 bg-gradient-to-r from-accent/30 to-accent-secondary/30 rounded-full blur-lg" />
@@ -130,6 +213,7 @@ export default function HeroSection() {
           {/* Main heading */}
           <div className="space-y-4 sm:space-y-6">
             <motion.h1
+              ref={titleRef}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
@@ -142,6 +226,7 @@ export default function HeroSection() {
             </motion.h1>
 
             <motion.div
+              ref={subtitleRef}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
@@ -179,6 +264,7 @@ export default function HeroSection() {
 
           {/* Enhanced CTA Buttons */}
           <motion.div
+            ref={ctaRef}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0 }}
@@ -228,6 +314,13 @@ export default function HeroSection() {
                 label: "Email",
                 color: "text-foreground hover:text-accent",
               },
+              {
+                icon: Download,
+                href: "/resume.pdf",
+                label: "Resume",
+                color: "text-foreground hover:text-accent-secondary",
+                download: "Karthik_Mudunuri_Resume.pdf",
+              },
             ].map((social, index) => (
               <motion.a
                 key={social.label}
@@ -238,6 +331,7 @@ export default function HeroSection() {
                     ? undefined
                     : "noopener noreferrer"
                 }
+                download={social.download}
                 whileHover={{ scale: 1.3, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
                 className="group relative"
@@ -287,7 +381,7 @@ export default function HeroSection() {
         </motion.div>
       </motion.div>
 
-      {/* Enhanced Decorative elements - Desktop only and positioned better */}
+      {/* Enhanced Decorative elements - PC view (xl and above) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none hidden xl:block">
         {/* Code-like decorative elements - Top right */}
         <motion.div
@@ -326,6 +420,47 @@ export default function HeroSection() {
             <div className="text-muted-foreground">// One line at a time</div>
             <div className="text-accent-secondary">
               console.log(<span className="text-accent">'Hello World!'</span>);
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      {/* Enhanced Decorative elements - Mobile view (below xl) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none block xl:hidden">
+        {/* Code-like decorative elements - Top right for mobile */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 1.5 }}
+          className="absolute top-16 right-2 sm:right-4 font-jetbrains text-accent/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent/20 max-w-[140px] sm:max-w-xs"
+        >
+          <div className="space-y-1">
+            <div className="text-accent-secondary text-xs">
+              const dev = &#123;
+            </div>
+            <div className="ml-1 text-foreground text-xs">
+              name: <span className="text-accent">'Karthik'</span>,
+            </div>
+            <div className="ml-1 text-foreground text-xs">
+              skills: <span className="text-accent">['React']</span>,
+            </div>
+            <div className="text-accent-secondary text-xs">&#125;;</div>
+          </div>
+        </motion.div>
+
+        {/* Bottom left decorative element for mobile */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 1.7 }}
+          className="absolute bottom-16 left-2 sm:left-4 font-jetbrains text-muted-foreground/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent-secondary/20 max-w-[140px] sm:max-w-xs"
+        >
+          <div className="space-y-1">
+            <div className="text-muted-foreground text-xs">
+              // Future builder
+            </div>
+            <div className="text-accent-secondary text-xs">
+              console.log(<span className="text-accent">'Hello!'</span>);
             </div>
           </div>
         </motion.div>

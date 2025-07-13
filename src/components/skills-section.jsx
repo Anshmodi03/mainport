@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Code2,
   Palette,
@@ -11,6 +13,8 @@ import {
   Zap,
 } from "lucide-react";
 import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function SkillsSection() {
   const { ref, isVisible } = useScrollAnimation();
