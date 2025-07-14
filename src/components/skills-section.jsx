@@ -135,7 +135,7 @@ export default function SkillsSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space gradient-text mb-6 text-shadow-glow"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow"
           >
             Skills & Expertise
           </motion.h2>

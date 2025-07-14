@@ -1,12 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, memo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Home, User, Code, Award, Mail, Sparkles } from "lucide-react";
+import {
+  Menu,
+  X,
+  Home,
+  User,
+  Code,
+  Mail,
+  Briefcase,
+  Award,
+  Sparkles,
+} from "lucide-react";
+import { usePerformanceOptimization } from "../hooks/use-performance.jsx";
 import { useIsMobile } from "../hooks/use-mobile.jsx";
 
-export default function Navigation() {
-  const [isOpen, setIsOpen] = useState(false);
+const Navigation = memo(() => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
-  const [scrolled, setScrolled] = useState(false);
+  const { throttle } = usePerformanceOptimization();
   const isMobile = useIsMobile();
 
   const navItems = [
@@ -17,9 +29,10 @@ export default function Navigation() {
     { id: "contact", label: "Contact", icon: Mail },
   ];
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+  const handleScroll = useCallback(
+    throttle(() => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 50);
 
       // Update active section based on scroll position
       const sections = navItems.map((item) => item.id);
@@ -35,15 +48,18 @@ export default function Navigation() {
       if (currentSection) {
         setActiveSection(currentSection);
       }
-    };
+    }, 16),
+    [throttle, navItems]
+  );
 
-    window.addEventListener("scroll", handleScroll);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [handleScroll]);
 
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = useCallback((sectionId) => {
     // Close mobile menu first
-    setIsOpen(false);
+    setIsMobileMenuOpen(false);
 
     // Small delay to allow menu to close
     setTimeout(() => {
@@ -62,7 +78,7 @@ export default function Navigation() {
         setActiveSection(sectionId);
       }
     }, 100);
-  };
+  }, []);
 
   return (
     <motion.nav
@@ -70,7 +86,7 @@ export default function Navigation() {
       animate={{ y: 0 }}
       transition={{ duration: 0.5 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? "nav-blur border-b border-accent/20" : "bg-transparent"
+        isScrolled ? "nav-blur border-b border-accent/20" : "bg-transparent"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -134,16 +150,16 @@ export default function Navigation() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.3 }}
             className="md:hidden p-3 text-muted-foreground hover:text-accent transition-colors duration-300 z-50 relative rounded-2xl hover:bg-accent/10 border border-accent/20"
-            onClick={() => setIsOpen(!isOpen)}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </motion.button>
         </div>
       </div>
 
       {/* Enhanced Mobile Navigation */}
       <AnimatePresence>
-        {isOpen && (
+        {isMobileMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
@@ -175,4 +191,8 @@ export default function Navigation() {
       </AnimatePresence>
     </motion.nav>
   );
-}
+});
+
+Navigation.displayName = "Navigation";
+
+export default Navigation;

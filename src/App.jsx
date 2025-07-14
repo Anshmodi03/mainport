@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/home.jsx";
-import NotFound from "./pages/not-found.jsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoadingScreen from "./components/loading-screen.jsx";
+
+// Lazy load components for better performance
+const Home = lazy(() => import("./pages/home.jsx"));
+const NotFound = lazy(() => import("./pages/not-found.jsx"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,12 +20,14 @@ const queryClient = new QueryClient({
 function AppRouter() {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/not-found" element={<NotFound />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/not-found" element={<NotFound />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

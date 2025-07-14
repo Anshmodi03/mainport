@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import Navigation from "../components/navigation.jsx";
 import HeroSection from "../components/hero-section.jsx";
 import AboutSection from "../components/about-section.jsx";
@@ -7,7 +7,7 @@ import SkillsSection from "../components/skills-section.jsx";
 import ContactSection from "../components/contact-section.jsx";
 import ThreeDScene from "../components/three-d-scene.jsx";
 
-export default function Home() {
+const Home = memo(() => {
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <ThreeDScene />
@@ -31,4 +31,8 @@ export default function Home() {
       </main>
     </div>
   );
-}
+});
+
+Home.displayName = "Home";
+
+export default Home;

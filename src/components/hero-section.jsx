@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -39,13 +39,19 @@ export default function HeroSection() {
     delaySpeed: 2500,
   });
 
-  useEffect(() => {
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
+  const handleMouseMove = useCallback((e) => {
+    setMousePosition({ x: e.clientX, y: e.clientY });
+  }, []);
 
+  useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove);
 
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, [handleMouseMove]);
+
+  useEffect(() => {
     // Complex GSAP animations
     const tl = gsap.timeline();
 
@@ -103,7 +109,6 @@ export default function HeroSection() {
     });
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);

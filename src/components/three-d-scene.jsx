@@ -1,29 +1,65 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, memo, useCallback } from "react";
 import * as THREE from "three";
+import { usePerformanceOptimization } from "../hooks/use-performance.jsx";
 
-export default function ThreeDScene() {
+const ThreeDScene = memo(() => {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
   const rendererRef = useRef(null);
-  const frameRef = useRef(null);
+  const animationId = useRef(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const { throttle } = usePerformanceOptimization();
+
+  // Refined minimal color palette
+  const colorPalette = {
+    primary: new THREE.Color(0x6366f1), // Indigo
+    secondary: new THREE.Color(0x8b5cf6), // Violet
+    accent: new THREE.Color(0x06b6d4), // Cyan
+  };
+
+  const handleResize = useCallback(
+    throttle(() => {
+      if (!rendererRef.current || !sceneRef.current) return;
+
+      const camera = sceneRef.current.children.find(
+        (child) => child instanceof THREE.PerspectiveCamera
+      );
+
+      if (camera) {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+      }
+
+      rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+    }, 100),
+    [throttle]
+  );
 
   useEffect(() => {
     if (!mountRef.current) return;
 
-    // Scene setup
+    // Enhanced scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
       75,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000
+      2000
     );
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true,
+      powerPreference: "high-performance",
+    });
 
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setClearColor(0x000000, 0);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.4;
 
     mountRef.current.appendChild(renderer.domElement);
 
@@ -31,224 +67,431 @@ export default function ThreeDScene() {
     sceneRef.current = scene;
     rendererRef.current = renderer;
 
-    // Create particles with new color palette
-    const particlesGeometry = new THREE.BufferGeometry();
-    const particlesCount = 1000;
-    const posArray = new Float32Array(particlesCount * 3);
+    // Create subtle fog for depth
+    scene.fog = new THREE.Fog(0x0f172a, 150, 1000);
 
-    for (let i = 0; i < particlesCount * 3; i++) {
-      posArray[i] = (Math.random() - 0.5) * 200;
+    // Enhanced lighting setup for better visibility
+    const ambientLight = new THREE.AmbientLight(0x4f46e5, 0.25);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0x8b5cf6, 0.5);
+    directionalLight.position.set(100, 100, 50);
+    directionalLight.castShadow = true;
+    directionalLight.shadow.mapSize.width = 1024;
+    directionalLight.shadow.mapSize.height = 1024;
+    scene.add(directionalLight);
+
+    // Subtle point lights
+    const pointLight1 = new THREE.PointLight(0x6366f1, 0.4, 300);
+    pointLight1.position.set(-80, 80, 80);
+    scene.add(pointLight1);
+
+    const pointLight2 = new THREE.PointLight(0x8b5cf6, 0.3, 250);
+    pointLight2.position.set(80, -80, -80);
+    scene.add(pointLight2);
+
+    // 1. Minimal geometric constellation
+    const geometries = [
+      new THREE.OctahedronGeometry(3, 1),
+      new THREE.IcosahedronGeometry(2.5, 1),
+      new THREE.TetrahedronGeometry(3.5, 0),
+    ];
+
+    const shapes = [];
+    for (let i = 0; i < 12; i++) {
+      const geometry = geometries[i % geometries.length];
+      const colorKeys = Object.keys(colorPalette);
+      const selectedColor = colorPalette[colorKeys[i % colorKeys.length]];
+
+      const material = new THREE.MeshPhongMaterial({
+        color: selectedColor,
+        transparent: true,
+        opacity: 0.4,
+        shininess: 100,
+        specular: 0x666666,
+        emissive: selectedColor.clone().multiplyScalar(0.1),
+      });
+
+      const mesh = new THREE.Mesh(geometry, material);
+      mesh.position.set(
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 400
+      );
+      mesh.rotation.set(
+        Math.random() * Math.PI,
+        Math.random() * Math.PI,
+        Math.random() * Math.PI
+      );
+
+      shapes.push({
+        mesh,
+        rotationSpeed: {
+          x: (Math.random() - 0.5) * 0.03,
+          y: (Math.random() - 0.5) * 0.03,
+          z: (Math.random() - 0.5) * 0.03,
+        },
+        floatSpeed: Math.random() * 0.015 + 0.008,
+        floatRange: Math.random() * 30 + 15,
+        initialY: mesh.position.y,
+        pulseFactor: Math.random() * 0.5 + 0.5,
+      });
+
+      scene.add(mesh);
     }
 
-    particlesGeometry.setAttribute(
-      "position",
-      new THREE.BufferAttribute(posArray, 3)
-    );
+    // 2. Multi-layered particle systems with different colors
+    const createParticleSystem = (
+      count,
+      color,
+      size,
+      speed,
+      pattern = "random"
+    ) => {
+      const geometry = new THREE.BufferGeometry();
+      const positions = new Float32Array(count * 3);
+      const velocities = new Float32Array(count * 3);
+      const scales = new Float32Array(count);
+      const colors = new Float32Array(count * 3);
 
-    const particlesMaterial = new THREE.PointsMaterial({
-      size: 0.8,
-      color: 0x00d4ff, // Updated to accent color
-      transparent: true,
-      opacity: 0.6,
-      blending: THREE.AdditiveBlending,
-    });
+      for (let i = 0; i < count * 3; i += 3) {
+        if (pattern === "spiral") {
+          const radius = (i / (count * 3)) * 300;
+          const angle = (i / (count * 3)) * Math.PI * 10;
+          positions[i] = Math.cos(angle) * radius;
+          positions[i + 1] = (Math.random() - 0.5) * 100;
+          positions[i + 2] = Math.sin(angle) * radius;
+        } else {
+          positions[i] = (Math.random() - 0.5) * 500;
+          positions[i + 1] = (Math.random() - 0.5) * 500;
+          positions[i + 2] = (Math.random() - 0.5) * 500;
+        }
 
-    const particlesMesh = new THREE.Points(
-      particlesGeometry,
-      particlesMaterial
-    );
-    scene.add(particlesMesh);
+        velocities[i] = (Math.random() - 0.5) * speed;
+        velocities[i + 1] = (Math.random() - 0.5) * speed;
+        velocities[i + 2] = (Math.random() - 0.5) * speed;
 
-    // Create geometric shapes with updated color palette
-    const shapes = [];
+        // Color variation
+        colors[i] = color.r + (Math.random() - 0.5) * 0.3;
+        colors[i + 1] = color.g + (Math.random() - 0.5) * 0.3;
+        colors[i + 2] = color.b + (Math.random() - 0.5) * 0.3;
+      }
 
-    // Torus with primary accent color
-    const torusGeometry = new THREE.TorusGeometry(10, 3, 16, 100);
-    const torusMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00d4ff, // Accent color
-      wireframe: true,
-      transparent: true,
-      opacity: 0.4,
-    });
-    const torus = new THREE.Mesh(torusGeometry, torusMaterial);
-    torus.position.set(-30, 0, -50);
-    scene.add(torus);
-    shapes.push(torus);
+      for (let i = 0; i < count; i++) {
+        scales[i] = Math.random() * 1.5 + 0.5;
+      }
 
-    // Icosahedron with secondary accent color
-    const icosahedronGeometry = new THREE.IcosahedronGeometry(8, 1);
-    const icosahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x7c3aed, // Accent secondary color
-      wireframe: true,
-      transparent: true,
-      opacity: 0.5,
-    });
-    const icosahedron = new THREE.Mesh(
-      icosahedronGeometry,
-      icosahedronMaterial
-    );
-    icosahedron.position.set(30, 20, -60);
-    scene.add(icosahedron);
-    shapes.push(icosahedron);
+      geometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(positions, 3)
+      );
+      geometry.setAttribute("scale", new THREE.BufferAttribute(scales, 1));
+      geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
 
-    // Octahedron with muted foreground
-    const octahedronGeometry = new THREE.OctahedronGeometry(6, 2);
-    const octahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x94a3b8, // Muted foreground color
-      wireframe: true,
-      transparent: true,
-      opacity: 0.3,
-    });
-    const octahedron = new THREE.Mesh(octahedronGeometry, octahedronMaterial);
-    octahedron.position.set(0, -20, -40);
-    scene.add(octahedron);
-    shapes.push(octahedron);
+      const material = new THREE.PointsMaterial({
+        size: size,
+        transparent: true,
+        opacity: 0.6,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        sizeAttenuation: true,
+        vertexColors: true,
+      });
 
-    // Dodecahedron with gradient-like mixed color
-    const dodecahedronGeometry = new THREE.DodecahedronGeometry(5, 1);
-    const dodecahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x8b5cf6, // Mix of accent and accent-secondary
-      wireframe: true,
-      transparent: true,
-      opacity: 0.4,
-    });
-    const dodecahedron = new THREE.Mesh(
-      dodecahedronGeometry,
-      dodecahedronMaterial
-    );
-    dodecahedron.position.set(-15, 30, -70);
-    scene.add(dodecahedron);
-    shapes.push(dodecahedron);
+      const points = new THREE.Points(geometry, material);
+      return { points, velocities };
+    };
 
-    // Add additional geometric shapes for more visual interest
-    // Sphere with accent color
-    const sphereGeometry = new THREE.SphereGeometry(4, 16, 16);
-    const sphereMaterial = new THREE.MeshBasicMaterial({
-      color: 0x00d4ff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.3,
-    });
-    const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-    sphere.position.set(40, -10, -45);
-    scene.add(sphere);
-    shapes.push(sphere);
+    // Minimal particle systems
+    const particleSystems = [
+      createParticleSystem(800, colorPalette.primary, 2.5, 0.02),
+      createParticleSystem(500, colorPalette.secondary, 2, 0.018, "spiral"),
+      createParticleSystem(400, colorPalette.accent, 2.2, 0.015),
+    ];
 
-    // Tetrahedron with secondary accent
-    const tetrahedronGeometry = new THREE.TetrahedronGeometry(6, 0);
-    const tetrahedronMaterial = new THREE.MeshBasicMaterial({
-      color: 0x7c3aed,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.4,
-    });
-    const tetrahedron = new THREE.Mesh(
-      tetrahedronGeometry,
-      tetrahedronMaterial
-    );
-    tetrahedron.position.set(-40, -15, -55);
-    scene.add(tetrahedron);
-    shapes.push(tetrahedron);
+    particleSystems.forEach(({ points }) => scene.add(points));
 
-    // Camera position
-    camera.position.z = 30;
-    camera.position.y = 5;
+    // 3. Enhanced energy field with multiple colors
+    const createEnergyField = () => {
+      const fieldGeometry = new THREE.BufferGeometry();
+      const fieldCount = 2000;
+      const fieldPositions = new Float32Array(fieldCount * 3);
+      const fieldColors = new Float32Array(fieldCount * 3);
 
-    // Mouse interaction
+      const colorArray = Object.values(colorPalette);
+
+      for (let i = 0; i < fieldCount; i++) {
+        const radius = Math.random() * 300 + 50;
+        const theta = Math.random() * Math.PI * 2;
+        const phi = Math.random() * Math.PI;
+
+        fieldPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+        fieldPositions[i * 3 + 1] = radius * Math.cos(phi);
+        fieldPositions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+
+        const color = colorArray[i % colorArray.length];
+        fieldColors[i * 3] = color.r;
+        fieldColors[i * 3 + 1] = color.g;
+        fieldColors[i * 3 + 2] = color.b;
+      }
+
+      fieldGeometry.setAttribute(
+        "position",
+        new THREE.BufferAttribute(fieldPositions, 3)
+      );
+      fieldGeometry.setAttribute(
+        "color",
+        new THREE.BufferAttribute(fieldColors, 3)
+      );
+
+      const fieldMaterial = new THREE.PointsMaterial({
+        size: 1.5,
+        transparent: true,
+        opacity: 0.4,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        vertexColors: true,
+      });
+
+      return new THREE.Points(fieldGeometry, fieldMaterial);
+    };
+
+    const energyField = createEnergyField();
+    scene.add(energyField);
+
+    // 4. Subtle energy rings
+    const rings = [];
+    const ringColors = Object.values(colorPalette);
+    for (let i = 0; i < 4; i++) {
+      const ringGeometry = new THREE.RingGeometry(40 + i * 20, 44 + i * 20, 64);
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        color: ringColors[i % ringColors.length],
+        transparent: true,
+        opacity: 0.2,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+      });
+
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.3;
+      ring.rotation.y = (Math.random() - 0.5) * 0.3;
+      ring.position.y = (i - 4) * 40;
+      rings.push({
+        mesh: ring,
+        speed: 0.008 + i * 0.003,
+        direction: i % 2 === 0 ? 1 : -1,
+        baseOpacity: 0.15 + i * 0.02,
+      });
+      scene.add(ring);
+    }
+
+    // 5. Floating orbs with inner glow
+    const orbs = [];
+    for (let i = 0; i < 6; i++) {
+      const orbGeometry = new THREE.SphereGeometry(8, 16, 16);
+      const orbMaterial = new THREE.MeshPhongMaterial({
+        color:
+          Object.values(colorPalette)[i % Object.values(colorPalette).length],
+        transparent: true,
+        opacity: 0.3,
+        emissive: Object.values(colorPalette)
+          [i % Object.values(colorPalette).length].clone()
+          .multiplyScalar(0.2),
+        shininess: 100,
+      });
+
+      const orb = new THREE.Mesh(orbGeometry, orbMaterial);
+      orb.position.set(
+        (Math.random() - 0.5) * 600,
+        (Math.random() - 0.5) * 400,
+        (Math.random() - 0.5) * 600
+      );
+
+      orbs.push({
+        mesh: orb,
+        speed: Math.random() * 0.01 + 0.005,
+        radius: Math.random() * 100 + 200,
+        angle: Math.random() * Math.PI * 2,
+        height: orb.position.y,
+      });
+
+      scene.add(orb);
+    }
+
+    // Position camera
+    camera.position.set(0, 0, 200);
+
+    // Enhanced mouse interaction
     const mouse = new THREE.Vector2();
-    let mouseX = 0;
-    let mouseY = 0;
 
     const handleMouseMove = (event) => {
-      mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-      mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      mouse.x = mouseX;
-      mouse.y = mouseY;
+      // Smooth camera movement
+      camera.position.x = THREE.MathUtils.lerp(
+        camera.position.x,
+        mouse.x * 30,
+        0.05
+      );
+      camera.position.y = THREE.MathUtils.lerp(
+        camera.position.y,
+        mouse.y * 30,
+        0.05
+      );
+      camera.lookAt(0, 0, 0);
     };
 
     window.addEventListener("mousemove", handleMouseMove);
 
-    // Animation loop
+    // Enhanced animation loop
+    let time = 0;
+    const clock = new THREE.Clock();
+
     const animate = () => {
-      frameRef.current = requestAnimationFrame(animate);
+      animationId.current = requestAnimationFrame(animate);
+      const deltaTime = clock.getDelta();
+      time += deltaTime;
 
-      // Rotate particles
-      if (particlesMesh) {
-        particlesMesh.rotation.x += 0.001;
-        particlesMesh.rotation.y += 0.002;
-      }
-
-      // Rotate shapes with varying speeds
+      // Animate geometric shapes with pulsing
       shapes.forEach((shape, index) => {
-        shape.rotation.x += 0.005 + index * 0.002;
-        shape.rotation.y += 0.003 + index * 0.001;
-        shape.rotation.z += 0.002;
+        shape.mesh.rotation.x += shape.rotationSpeed.x;
+        shape.mesh.rotation.y += shape.rotationSpeed.y;
+        shape.mesh.rotation.z += shape.rotationSpeed.z;
 
-        // Add floating animation with different patterns
-        shape.position.y += Math.sin(Date.now() * 0.001 + index) * 0.01;
+        // Enhanced floating motion with pulsing
+        shape.mesh.position.y =
+          shape.initialY +
+          Math.sin(time * shape.floatSpeed + index) * shape.floatRange;
 
-        // Add subtle pulsing effect to materials
-        if (shape.material.opacity) {
-          shape.material.opacity =
-            0.3 + Math.sin(Date.now() * 0.002 + index) * 0.2;
-        }
+        // Pulsing effect
+        const pulse = 1 + Math.sin(time * 2 + index) * 0.1 * shape.pulseFactor;
+        shape.mesh.scale.setScalar(pulse);
+
+        // Dynamic opacity
+        shape.mesh.material.opacity = 0.3 + Math.sin(time * 1.5 + index) * 0.2;
       });
 
-      // Camera follows mouse with smooth interpolation
-      camera.position.x += (mouseX * 5 - camera.position.x) * 0.05;
-      camera.position.y += (mouseY * 5 - camera.position.y) * 0.05;
-      camera.lookAt(scene.position);
+      // Animate particle systems
+      particleSystems.forEach(({ points, velocities }, systemIndex) => {
+        const positions = points.geometry.attributes.position.array;
 
+        for (let i = 0; i < positions.length; i += 3) {
+          positions[i] += velocities[i];
+          positions[i + 1] += velocities[i + 1];
+          positions[i + 2] += velocities[i + 2];
+
+          // Enhanced boundary wrapping
+          if (Math.abs(positions[i]) > 250) velocities[i] *= -1;
+          if (Math.abs(positions[i + 1]) > 250) velocities[i + 1] *= -1;
+          if (Math.abs(positions[i + 2]) > 250) velocities[i + 2] *= -1;
+        }
+
+        points.geometry.attributes.position.needsUpdate = true;
+        points.rotation.y += 0.002 * (systemIndex + 1);
+        points.rotation.x += 0.001 * Math.sin(time + systemIndex);
+      });
+
+      // Animate energy field
+      energyField.rotation.y += 0.008;
+      energyField.rotation.x += 0.003;
+
+      // Animate rings with enhanced effects
+      rings.forEach((ring, index) => {
+        ring.mesh.rotation.z += ring.speed * ring.direction;
+        ring.mesh.rotation.x += 0.002 * Math.sin(time + index);
+        ring.mesh.material.opacity =
+          ring.baseOpacity + Math.sin(time * 3 + index) * 0.1;
+      });
+
+      // Animate floating orbs
+      orbs.forEach((orb, index) => {
+        orb.angle += orb.speed;
+        orb.mesh.position.x = Math.cos(orb.angle) * orb.radius;
+        orb.mesh.position.z = Math.sin(orb.angle) * orb.radius;
+        orb.mesh.position.y = orb.height + Math.sin(time * 2 + index) * 50;
+
+        // Rotation
+        orb.mesh.rotation.y += 0.01;
+        orb.mesh.rotation.x += 0.005;
+      });
+
+      // Subtle dynamic lighting
+      pointLight1.position.x = Math.sin(time * 0.5) * 120;
+      pointLight1.position.z = Math.cos(time * 0.5) * 120;
+      pointLight1.intensity = 0.4 + Math.sin(time * 1.5) * 0.1;
+
+      pointLight2.position.x = Math.cos(time * 0.3) * 100;
+      pointLight2.position.y = Math.sin(time * 0.3) * 100;
+      pointLight2.intensity = 0.3 + Math.cos(time * 1.2) * 0.1;
+
+      // Render
       renderer.render(scene, camera);
     };
 
     animate();
     setIsLoaded(true);
 
-    // Handle resize
-    const handleResize = () => {
-      if (camera && renderer) {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-      }
-    };
+    // Event listeners
+    window.addEventListener("resize", handleResize, { passive: true });
 
-    window.addEventListener("resize", handleResize);
-
-    // Cleanup
     return () => {
-      if (frameRef.current) {
-        cancelAnimationFrame(frameRef.current);
+      if (animationId.current) {
+        cancelAnimationFrame(animationId.current);
       }
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("mousemove", handleMouseMove);
+
       if (mountRef.current && renderer.domElement) {
         mountRef.current.removeChild(renderer.domElement);
       }
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("resize", handleResize);
 
-      // Dispose of geometries and materials
+      // Cleanup
       shapes.forEach((shape) => {
-        if (shape.geometry) shape.geometry.dispose();
-        if (shape.material) shape.material.dispose();
+        scene.remove(shape.mesh);
+        shape.mesh.geometry.dispose();
+        shape.mesh.material.dispose();
       });
 
-      if (particlesGeometry) particlesGeometry.dispose();
-      if (particlesMaterial) particlesMaterial.dispose();
-      if (renderer) renderer.dispose();
+      particleSystems.forEach(({ points }) => {
+        scene.remove(points);
+        points.geometry.dispose();
+        points.material.dispose();
+      });
+
+      rings.forEach((ring) => {
+        scene.remove(ring.mesh);
+        ring.mesh.geometry.dispose();
+        ring.mesh.material.dispose();
+      });
+
+      orbs.forEach((orb) => {
+        scene.remove(orb.mesh);
+        orb.mesh.geometry.dispose();
+        orb.mesh.material.dispose();
+      });
+
+      scene.remove(energyField);
+      energyField.geometry.dispose();
+      energyField.material.dispose();
+
+      renderer.dispose();
     };
-  }, []);
+  }, [handleResize]);
 
   return (
     <div
       ref={mountRef}
-      className="fixed inset-0 -z-10 opacity-60"
+      className="fixed inset-0 -z-10 overflow-hidden"
       style={{
-        background:
-          "radial-gradient(circle at 50% 50%, rgba(0, 212, 255, 0.08) 0%, rgba(124, 58, 237, 0.05) 50%, transparent 70%)",
         pointerEvents: "none",
+        background:
+          "radial-gradient(ellipse at center, rgba(15, 23, 42, 0.4) 0%, rgba(2, 6, 23, 0.7) 100%)",
       }}
     />
   );
-}
+});
+
+ThreeDScene.displayName = "ThreeDScene";
+
+export default ThreeDScene;
