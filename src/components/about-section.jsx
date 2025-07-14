@@ -19,6 +19,7 @@ export default function AboutSection() {
   const stats = [
     { number: "40+", label: "Projects Completed", icon: Target },
     { number: "1+", label: "Years Experience", icon: Code2 },
+    { number: "10K+", label: "Lines of Code", icon: Code2 },
     { number: "24/7", label: "Learning Mode", icon: BookOpen },
   ];
 
@@ -64,11 +65,12 @@ export default function AboutSection() {
           if (currentValue >= numericValue) {
             currentValue = numericValue;
             clearInterval(timer);
+            number.textContent = finalValue; // Show final value exactly as defined
+          } else {
+            // For animation, replace only the numeric part while preserving structure
+            const animatedValue = Math.floor(currentValue);
+            number.textContent = finalValue.replace(/\d+/, animatedValue);
           }
-
-          const element = number;
-          element.textContent =
-            Math.floor(currentValue) + finalValue.replace(/\d/g, "");
         }, 50);
       });
     }
@@ -178,11 +180,11 @@ export default function AboutSection() {
               <div className="absolute bottom-6 left-6 right-6">
                 <div className="glass-effect rounded-xl p-4 border border-accent/30">
                   <div className="flex items-center space-x-3 text-sm font-jetbrains">
-                    <Coffee className="w-5 h-5 text-accent animate-pulse" />
-                    <span className="text-accent font-medium">
+                    <Coffee className="w-5 h-5 text-black animate-pulse" />
+                    <span className="text-black font-medium">
                       Currently coding...
                     </span>
-                    <Rocket className="w-5 h-5 text-accent-secondary animate-bounce" />
+                    <Rocket className="w-5 h-5 text-black animate-bounce" />
                   </div>
                 </div>
               </div>
@@ -227,17 +229,13 @@ export default function AboutSection() {
                 Who I Am
               </h3>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                I'm{" "}
-                <span className="text-accent font-semibold">
-                  Mudunuri Bhaskara Karthikeya Varma
-                </span>
-                , currently pursuing{" "}
-                <span className="text-accent-secondary font-semibold">
-                  B.Tech at Woxsen University
-                </span>
-                . I'm passionate about Front-end & Full Stack Development with
-                expertise in JavaScript, Next.js, React.js, and modern web
-                technologies.
+                I'm <span className="text-accent font-semibold">Ansh Modi</span>
+                , a Full Stack Developer from India, skilled in the MERN stack
+                (MongoDB, Express.js, React, Node.js). I led the development of
+                a scalable internship platform at MissionT5, delivering
+                responsive front-end interfaces and robust backend systems.
+                Certified by upGrad, I'm passionate about innovation and eager
+                to contribute to impactful tech projects.
               </p>
               <p className="text-muted-foreground leading-relaxed">
                 I believe in trying out new things and picking up challenges as
@@ -261,21 +259,27 @@ export default function AboutSection() {
                 What I Do
               </h3>
               <p className="text-muted-foreground leading-relaxed mb-5">
-                Whether I'm designing a sleek user interface or coding a complex
-                application, I'm always striving to create something{" "}
+                I'm <span className="text-accent font-semibold">Ansh Modi</span>
+                , a Full Stack Developer from India, skilled in the MERN stack
+                (MongoDB, Express.js, React, Node.js). I build scalable web
+                applications, like the internship platform I led at MissionT5,
+                creating responsive front-ends and robust backends. Certified by
+                upGrad, I'm passionate about{" "}
                 <span className="text-accent font-semibold">
-                  unique and innovative
+                  innovative tech solutions
                 </span>
-                . I love experimenting with new technologies and staying
-                up-to-date with the latest trends in the tech world.
+                .
               </p>
               <div className="flex flex-wrap gap-3 mt-6">
                 {[
+                  "MERN Stack",
+                  "HTML",
+                  "CSS",
+                  "Tailwind CSS",
+                  "JavaScript",
                   "React",
-                  "Three.js",
-                  "TypeScript",
-                  "Next.js",
-                  "Figma",
+                  "Express.js",
+                  "MongoDB",
                   "Node.js",
                 ].map((tech) => (
                   <span
@@ -299,14 +303,15 @@ export default function AboutSection() {
                 My Mission
               </h3>
               <p className="text-muted-foreground leading-relaxed">
-                To bridge the gap between{" "}
+                As <span className="text-accent font-semibold">Ansh Modi</span>,
+                a Full Stack Developer from India, my mission is to build
+                innovative, user-focused web applications using the MERN stack.
+                Leveraging my expertise from leading MissionT5's internship
+                platform and upGrad certifications, I aim to deliver{" "}
                 <span className="text-accent font-semibold">
-                  design and technology
-                </span>
-                , creating digital experiences that are not only functional but
-                also beautiful and meaningful. I'm committed to continuous
-                learning and pushing the boundaries of what's possible on the
-                web.
+                  impactful tech solutions
+                </span>{" "}
+                and drive meaningful change.
               </p>
             </motion.div>
           </motion.div>

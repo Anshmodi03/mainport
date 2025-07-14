@@ -107,7 +107,7 @@ const Navigation = memo(() => {
             </div>
             <div className="flex items-center">
               <span className="text-2xl font-bold font-space gradient-text">
-                Karthik
+                Ansh Modi
               </span>
               <Sparkles className="w-5 h-5 text-accent ml-2 animate-pulse" />
             </div>

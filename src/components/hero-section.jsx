@@ -10,6 +10,9 @@ import {
   Download,
   Play,
   Sparkles,
+  FileText,
+  Eye,
+  X,
 } from "lucide-react";
 import { useTypingAnimation } from "../hooks/use-typing-animation.jsx";
 import { Button } from "./ui/button.jsx";
@@ -18,6 +21,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showResumePopup, setShowResumePopup] = useState(false);
   const heroRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -315,39 +319,56 @@ export default function HeroSection() {
                 color: "text-foreground hover:text-accent",
               },
               {
-                icon: Download,
-                href: "../../Ansh-Modi-Resume.pdf",
+                icon: FileText,
                 label: "Resume",
                 color: "text-foreground hover:text-accent-secondary",
-                download: "Ansh_Modi_Resume.pdf",
+                isResumeButton: true,
               },
             ].map((social, index) => (
-              <motion.a
+              <motion.div
                 key={social.label}
-                href={social.href}
-                target={social.href.startsWith("mailto") ? "_self" : "_blank"}
-                rel={
-                  social.href.startsWith("mailto")
-                    ? undefined
-                    : "noopener noreferrer"
-                }
-                download={social.download}
                 whileHover={{ scale: 1.3, rotate: 5 }}
                 whileTap={{ scale: 0.9 }}
-                className="group relative"
+                className="group relative cursor-pointer"
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: 1.5 + index * 0.1 }}
+                onClick={
+                  social.isResumeButton
+                    ? () => setShowResumePopup(true)
+                    : undefined
+                }
               >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:from-accent/30 group-hover:to-accent-secondary/30 transition-all duration-300 magnetic-effect glow-border">
-                  <social.icon
-                    className={`w-6 h-6 sm:w-7 sm:h-7 ${social.color} transition-all duration-300`}
-                  />
-                </div>
+                {social.isResumeButton ? (
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:from-accent/30 group-hover:to-accent-secondary/30 transition-all duration-300 magnetic-effect glow-border">
+                    <social.icon
+                      className={`w-6 h-6 sm:w-7 sm:h-7 ${social.color} transition-all duration-300`}
+                    />
+                  </div>
+                ) : (
+                  <a
+                    href={social.href}
+                    target={
+                      social.href.startsWith("mailto") ? "_self" : "_blank"
+                    }
+                    rel={
+                      social.href.startsWith("mailto")
+                        ? undefined
+                        : "noopener noreferrer"
+                    }
+                    className="block"
+                  >
+                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:from-accent/30 group-hover:to-accent-secondary/30 transition-all duration-300 magnetic-effect glow-border">
+                      <social.icon
+                        className={`w-6 h-6 sm:w-7 sm:h-7 ${social.color} transition-all duration-300`}
+                      />
+                    </div>
+                  </a>
+                )}
                 <span className="absolute -bottom-8 sm:-bottom-10 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium whitespace-nowrap">
                   {social.label}
                 </span>
-              </motion.a>
+              </motion.div>
             ))}
           </motion.div>
         </motion.div>
@@ -395,11 +416,10 @@ export default function HeroSection() {
               const developer = &#123;
             </div>
             <div className="ml-2 text-foreground text-xs">
-              name: <span className="text-accent">'Karthik'</span>,
+              name: <span className="text-accent">'Ansh Modi'</span>,
             </div>
             <div className="ml-2 text-foreground text-xs">
-              skills: <span className="text-accent">['React', 'Three.js']</span>
-              ,
+              skills: <span className="text-accent">['React', 'Node.js']</span>,
             </div>
             <div className="ml-2 text-foreground text-xs">
               passion: <span className="text-accent">'Innovation'</span>
@@ -439,10 +459,10 @@ export default function HeroSection() {
               const dev = &#123;
             </div>
             <div className="ml-1 text-foreground text-xs">
-              name: <span className="text-accent">'Karthik'</span>,
+              name: <span className="text-accent">'Ansh'</span>,
             </div>
             <div className="ml-1 text-foreground text-xs">
-              skills: <span className="text-accent">['React']</span>,
+              skills: <span className="text-accent">['React, Node.js']</span>,
             </div>
             <div className="text-accent-secondary text-xs">&#125;;</div>
           </div>
@@ -465,6 +485,79 @@ export default function HeroSection() {
           </div>
         </motion.div>
       </div>
+
+      {/* Resume Popup */}
+      {showResumePopup && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+          onClick={() => setShowResumePopup(false)}
+        >
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ type: "spring", duration: 0.5 }}
+            className="bg-gradient-to-br from-background/95 to-background-secondary/95 backdrop-blur-lg rounded-2xl p-8 max-w-md w-full mx-4 glow-border relative"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Close Button */}
+            <button
+              onClick={() => setShowResumePopup(false)}
+              className="absolute top-4 right-4 w-8 h-8 bg-accent/20 hover:bg-accent/30 rounded-full flex items-center justify-center transition-all duration-300 group"
+            >
+              <X className="w-4 h-4 text-foreground group-hover:text-accent transition-colors duration-300" />
+            </button>
+
+            {/* Popup Content */}
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-r from-accent/30 to-accent-secondary/30 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <FileText className="w-8 h-8 text-accent" />
+              </div>
+
+              <h3 className="text-2xl font-bold font-space gradient-text mb-2">
+                Ansh Modi's Resume
+              </h3>
+
+              <p className="text-muted-foreground mb-8 leading-relaxed">
+                Choose how you'd like to view my resume
+              </p>
+
+              {/* Action Buttons */}
+              <div className="space-y-4">
+                <motion.a
+                  href="../../Ansh-Modi-Resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-accent/20 to-accent-secondary/20 hover:from-accent/30 hover:to-accent-secondary/30 rounded-xl transition-all duration-300 glow-border hover-lift group"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Eye className="w-5 h-5 mr-3 text-accent group-hover:text-accent-secondary transition-colors duration-300" />
+                  <span className="text-foreground font-medium">
+                    Open Resume
+                  </span>
+                </motion.a>
+
+                <motion.a
+                  href="../../Ansh-Modi-Resume.pdf"
+                  download="Ansh_Modi_Resume.pdf"
+                  className="w-full flex items-center justify-center px-6 py-4 bg-gradient-to-r from-accent-secondary/20 to-accent/20 hover:from-accent-secondary/30 hover:to-accent/30 rounded-xl transition-all duration-300 glow-border hover-lift group"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <Download className="w-5 h-5 mr-3 text-accent-secondary group-hover:text-accent transition-colors duration-300" />
+                  <span className="text-foreground font-medium">
+                    Download Resume
+                  </span>
+                </motion.a>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </section>
   );
 }
