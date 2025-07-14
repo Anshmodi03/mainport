@@ -24,6 +24,7 @@ const Navigation = memo(() => {
   const navItems = [
     { id: "home", label: "Home", icon: Home },
     { id: "about", label: "About", icon: User },
+    { id: "experience", label: "Experience", icon: Briefcase },
     { id: "projects", label: "Projects", icon: Code },
     { id: "skills", label: "Skills", icon: Award },
     { id: "contact", label: "Contact", icon: Mail },

@@ -17,35 +17,35 @@ export default function AboutSection() {
   const statsRef = useRef(null);
 
   const stats = [
-    { number: "50+", label: "Projects Completed", icon: Target },
-    { number: "2+", label: "Years Experience", icon: Code2 },
-    { number: "100+", label: "Commits This Month", icon: Zap },
+    { number: "40+", label: "Projects Completed", icon: Target },
+    { number: "1+", label: "Years Experience", icon: Code2 },
     { number: "24/7", label: "Learning Mode", icon: BookOpen },
   ];
 
   const skills = [
     {
+      name: "Full Stack Development",
+      icon: Zap,
+      description: "React, Node.js, MongoDB",
+      color: "from-accent/20 to-accent-secondary/20",
+    },
+    {
       name: "Frontend Development",
       icon: Code2,
-      description: "React, Next.js, TypeScript",
+      description: "React, Javascript, Tailwind CSS",
       color: "from-accent/20 to-accent-secondary/20",
     },
     {
-      name: "UI/UX Design",
+      name: "Backend Development",
       icon: Palette,
-      description: "Figma, Adobe XD, Prototyping",
+      description: "Node.js, Express, MongoDB",
       color: "from-accent-secondary/20 to-accent/20",
     },
-    {
-      name: "3D Development",
-      icon: Zap,
-      description: "Three.js, WebGL, Blender",
-      color: "from-accent/20 to-accent-secondary/20",
-    },
+
     {
       name: "Problem Solving",
       icon: Target,
-      description: "Algorithms, Data Structures",
+      description: "Competitive Programming, Algorithms",
       color: "from-accent-secondary/20 to-accent/20",
     },
   ];
@@ -101,18 +101,18 @@ export default function AboutSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center justify-center mb-6"
           >
-            <Sparkles className="w-6 h-6 text-accent mr-3 animate-pulse" />
-            <span className="text-lg font-medium text-accent">
+            <Sparkles className="w-6 h-6 text-white mr-3 animate-pulse" />
+            <span className="text-lg font-medium text-white">
               Get to know me
             </span>
-            <Sparkles className="w-6 h-6 text-accent ml-3 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-white ml-3 animate-pulse" />
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
           >
             About Me
           </motion.h2>

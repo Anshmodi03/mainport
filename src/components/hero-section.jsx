@@ -26,9 +26,8 @@ export default function HeroSection() {
 
   const titles = [
     "Full Stack Developer",
-    "React Specialist",
-    "Three.js Enthusiast",
-    "UI/UX Designer",
+    "React Developer",
+    "Mern Stack Developer",
     "Problem Solver",
     "Innovation Creator",
   ];
@@ -193,11 +192,11 @@ export default function HeroSection() {
             className="absolute left-4 sm:left-8 md:left-12 lg:left-16  transform -translate-y-1/2 hidden md:flex flex-col items-start"
           >
             <div className="flex items-center mb-4 mt-8">
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-accent mr-2 animate-pulse" />
-              <span className="text-base sm:text-lg lg:text-xl font-medium text-accent">
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white mr-2 animate-pulse" />
+              <span className="text-base sm:text-lg lg:text-xl font-medium text-white">
                 Welcome to my digital universe
               </span>
-              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-accent ml-2 animate-pulse" />
+              <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white ml-2 animate-pulse" />
             </div>
           </motion.div>
 
@@ -208,11 +207,11 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 0.3 }}
             className="flex items-center justify-center mb-4 md:hidden"
           >
-            <Sparkles className="w-4 h-4 text-accent mr-2 animate-pulse" />
-            <span className="text-sm font-medium text-accent">
+            <Sparkles className="w-4 h-4 text-white mr-2 animate-pulse" />
+            <span className="text-sm font-medium text-white">
               Welcome to my digital universe
             </span>
-            <Sparkles className="w-4 h-4 text-accent ml-2 animate-pulse" />
+            <Sparkles className="w-4 h-4 text-white ml-2 animate-pulse" />
           </motion.div>
 
           {/* Main heading */}
@@ -226,7 +225,7 @@ export default function HeroSection() {
             >
               <span className="block text-foreground mb-1">Hi, I'm</span>
               <span className="block gradient-text text-shadow-glow animate-gradient bg-gradient-primary bg-clip-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
-                Karthik Mudunuri
+                Ansh Modi
               </span>
             </motion.h1>
 
@@ -253,14 +252,10 @@ export default function HeroSection() {
           >
             I'm a passionate developer creating{" "}
             <span className="text-accent font-semibold">
-              innovative digital experiences
+              innovative websites
             </span>{" "}
-            with modern web technologies. Currently pursuing B.Tech at{" "}
-            <span className="text-accent-secondary font-semibold">
-              Woxsen University
-            </span>
-            , specializing in front-end and full-stack development with a focus
-            on{" "}
+            with modern web technologies.Specializing in front-end and
+            full-stack development with a focus on{" "}
             <span className="gradient-text-secondary font-semibold">
               cutting-edge solutions
             </span>
@@ -303,28 +298,28 @@ export default function HeroSection() {
             {[
               {
                 icon: Github,
-                href: "https://github.com/karthikmudunuri",
+                href: "https://github.com/Anshmodi03",
                 label: "GitHub",
                 color: "text-foreground hover:text-accent",
               },
               {
                 icon: Linkedin,
-                href: "https://www.linkedin.com/in/karthikmudunuri/",
+                href: "https://www.linkedin.com/in/ansh-modi-/",
                 label: "LinkedIn",
                 color: "text-foreground hover:text-accent-secondary",
               },
               {
                 icon: Mail,
-                href: "mailto:karthikmudunuri999@gmail.com",
+                href: "mailto:modiaastha01@gmail.com",
                 label: "Email",
                 color: "text-foreground hover:text-accent",
               },
               {
                 icon: Download,
-                href: "/resume.pdf",
+                href: "../../Ansh-Modi-Resume.pdf",
                 label: "Resume",
                 color: "text-foreground hover:text-accent-secondary",
-                download: "Karthik_Mudunuri_Resume.pdf",
+                download: "Ansh_Modi_Resume.pdf",
               },
             ].map((social, index) => (
               <motion.a

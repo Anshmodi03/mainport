@@ -26,33 +26,24 @@ export default function ProjectsSection() {
   const projectImageRef = useRef([]);
 
   useEffect(() => {
-    // 3D tilt effect on project cards
+    // Gentle hover effect on project cards
     projectCardsRef.current.forEach((card, index) => {
       if (card) {
-        card.addEventListener("mousemove", (e) => {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left;
-          const y = e.clientY - rect.top;
-          const centerX = rect.width / 2;
-          const centerY = rect.height / 2;
-          const rotateX = (y - centerY) / 10;
-          const rotateY = (centerX - x) / 10;
-
+        card.addEventListener("mouseenter", () => {
           gsap.to(card, {
-            rotationX: rotateX,
-            rotationY: rotateY,
-            transformPerspective: 1000,
-            duration: 0.3,
+            y: -8,
+            scale: 1.02,
+            duration: 0.4,
             ease: "power2.out",
           });
         });
 
         card.addEventListener("mouseleave", () => {
           gsap.to(card, {
-            rotationX: 0,
-            rotationY: 0,
-            duration: 0.5,
-            ease: "back.out(1.7)",
+            y: 0,
+            scale: 1,
+            duration: 0.4,
+            ease: "power2.out",
           });
         });
 
@@ -164,18 +155,18 @@ export default function ProjectsSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center justify-center mb-6"
           >
-            <Zap className="w-6 h-6 text-accent mr-3 animate-pulse" />
-            <span className="text-lg font-medium text-accent">
+            <Zap className="w-6 h-6 text-white mr-3 animate-pulse" />
+            <span className="text-lg font-medium text-white">
               My latest creations
             </span>
-            <Zap className="w-6 h-6 text-accent ml-3 animate-pulse" />
+            <Zap className="w-6 h-6 text-white ml-3 animate-pulse" />
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
           >
             Featured Work
           </motion.h2>
@@ -207,8 +198,6 @@ export default function ProjectsSection() {
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: index * 0.2 }}
               className="project-card glow-border rounded-3xl overflow-hidden hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
-              onMouseEnter={() => setHoveredProject(index)}
-              onMouseLeave={() => setHoveredProject(null)}
             >
               <div className="relative mb-6 overflow-hidden">
                 <img

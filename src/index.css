@@ -19,6 +19,12 @@ section {
   background: hsl(var(--background));
 }
 
+#experience {
+  z-index: 25;
+  margin-top: 0;
+  background: hsl(var(--background));
+}
+
 /* Ensure proper stacking context */
 .relative {
   isolation: isolate;
@@ -61,8 +67,8 @@ section {
   --gradient-primary: linear-gradient(
     135deg,
     #6366f1 0%,
-    #8b5cf6 50%,
-    #06b6d4 100%
+    #9f81e6 50%,
+    #56f7ac 100%
   );
   --gradient-secondary: linear-gradient(
     135deg,
@@ -525,10 +531,9 @@ body::before {
 }
 
 .btn-primary {
-  background: var(--gradient-primary);
   color: white;
   padding: 0.875rem 2rem;
-  border: 1px solid transparent;
+  border: none;
   position: relative;
   overflow: hidden;
   box-shadow: var(--shadow-glow);
@@ -541,14 +546,13 @@ body::before {
   left: 0;
   right: 0;
   bottom: 0;
-  background: var(--gradient-primary);
+  background: #222755;
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: -1;
 }
 
 .btn-primary:hover {
-  box-shadow: var(--shadow-glow-hover);
   transform: translateY(-1px);
 }
 

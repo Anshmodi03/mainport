@@ -10,11 +10,10 @@ const ThreeDScene = memo(() => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { throttle } = usePerformanceOptimization();
 
-  // Refined minimal color palette
+  // Minimal dark color palette
   const colorPalette = {
-    primary: new THREE.Color(0x6366f1), // Indigo
-    secondary: new THREE.Color(0x8b5cf6), // Violet
-    accent: new THREE.Color(0x06b6d4), // Cyan
+    primary: new THREE.Color(0x4c1d95), // Deep purple
+    secondary: new THREE.Color(0x1e1b4b), // Dark indigo
   };
 
   const handleResize = useCallback(
@@ -67,26 +66,26 @@ const ThreeDScene = memo(() => {
     sceneRef.current = scene;
     rendererRef.current = renderer;
 
-    // Create subtle fog for depth
-    scene.fog = new THREE.Fog(0x0f172a, 150, 1000);
+    // Create darker fog for depth
+    scene.fog = new THREE.Fog(0x050517, 100, 800);
 
-    // Enhanced lighting setup for better visibility
-    const ambientLight = new THREE.AmbientLight(0x4f46e5, 0.25);
+    // Darker ambient lighting
+    const ambientLight = new THREE.AmbientLight(0x1e1b4b, 0.15);
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x8b5cf6, 0.5);
+    const directionalLight = new THREE.DirectionalLight(0x4c1d95, 0.3);
     directionalLight.position.set(100, 100, 50);
     directionalLight.castShadow = true;
     directionalLight.shadow.mapSize.width = 1024;
     directionalLight.shadow.mapSize.height = 1024;
     scene.add(directionalLight);
 
-    // Subtle point lights
-    const pointLight1 = new THREE.PointLight(0x6366f1, 0.4, 300);
+    // Minimal point lights
+    const pointLight1 = new THREE.PointLight(0x4c1d95, 0.25, 300);
     pointLight1.position.set(-80, 80, 80);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0x8b5cf6, 0.3, 250);
+    const pointLight2 = new THREE.PointLight(0x1e1b4b, 0.2, 250);
     pointLight2.position.set(80, -80, -80);
     scene.add(pointLight2);
 
@@ -106,10 +105,10 @@ const ThreeDScene = memo(() => {
       const material = new THREE.MeshPhongMaterial({
         color: selectedColor,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.25,
         shininess: 100,
-        specular: 0x666666,
-        emissive: selectedColor.clone().multiplyScalar(0.1),
+        specular: 0x333333,
+        emissive: selectedColor.clone().multiplyScalar(0.05),
       });
 
       const mesh = new THREE.Mesh(geometry, material);
@@ -191,7 +190,7 @@ const ThreeDScene = memo(() => {
       const material = new THREE.PointsMaterial({
         size: size,
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.35,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         sizeAttenuation: true,
@@ -206,7 +205,6 @@ const ThreeDScene = memo(() => {
     const particleSystems = [
       createParticleSystem(800, colorPalette.primary, 2.5, 0.02),
       createParticleSystem(500, colorPalette.secondary, 2, 0.018, "spiral"),
-      createParticleSystem(400, colorPalette.accent, 2.2, 0.015),
     ];
 
     particleSystems.forEach(({ points }) => scene.add(points));
@@ -247,7 +245,7 @@ const ThreeDScene = memo(() => {
       const fieldMaterial = new THREE.PointsMaterial({
         size: 1.5,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.25,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         vertexColors: true,
@@ -267,7 +265,7 @@ const ThreeDScene = memo(() => {
       const ringMaterial = new THREE.MeshBasicMaterial({
         color: ringColors[i % ringColors.length],
         transparent: true,
-        opacity: 0.2,
+        opacity: 0.1,
         side: THREE.DoubleSide,
         blending: THREE.AdditiveBlending,
       });
@@ -280,7 +278,7 @@ const ThreeDScene = memo(() => {
         mesh: ring,
         speed: 0.008 + i * 0.003,
         direction: i % 2 === 0 ? 1 : -1,
-        baseOpacity: 0.15 + i * 0.02,
+        baseOpacity: 0.08 + i * 0.01,
       });
       scene.add(ring);
     }
@@ -293,10 +291,10 @@ const ThreeDScene = memo(() => {
         color:
           Object.values(colorPalette)[i % Object.values(colorPalette).length],
         transparent: true,
-        opacity: 0.3,
+        opacity: 0.2,
         emissive: Object.values(colorPalette)
           [i % Object.values(colorPalette).length].clone()
-          .multiplyScalar(0.2),
+          .multiplyScalar(0.1),
         shininess: 100,
       });
 
@@ -369,7 +367,7 @@ const ThreeDScene = memo(() => {
         shape.mesh.scale.setScalar(pulse);
 
         // Dynamic opacity
-        shape.mesh.material.opacity = 0.3 + Math.sin(time * 1.5 + index) * 0.2;
+        shape.mesh.material.opacity = 0.2 + Math.sin(time * 1.5 + index) * 0.1;
       });
 
       // Animate particle systems
@@ -419,11 +417,11 @@ const ThreeDScene = memo(() => {
       // Subtle dynamic lighting
       pointLight1.position.x = Math.sin(time * 0.5) * 120;
       pointLight1.position.z = Math.cos(time * 0.5) * 120;
-      pointLight1.intensity = 0.4 + Math.sin(time * 1.5) * 0.1;
+      pointLight1.intensity = 0.25 + Math.sin(time * 1.5) * 0.05;
 
       pointLight2.position.x = Math.cos(time * 0.3) * 100;
       pointLight2.position.y = Math.sin(time * 0.3) * 100;
-      pointLight2.intensity = 0.3 + Math.cos(time * 1.2) * 0.1;
+      pointLight2.intensity = 0.2 + Math.cos(time * 1.2) * 0.05;
 
       // Render
       renderer.render(scene, camera);
