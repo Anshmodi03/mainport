@@ -7,8 +7,11 @@ import ProjectsSection from "../components/projects-section.jsx";
 import SkillsSection from "../components/skills-section.jsx";
 import ContactSection from "../components/contact-section.jsx";
 import ThreeDScene from "../components/three-d-scene.jsx";
+import { useScrollEffects } from "../hooks/use-scroll-effects.jsx";
 
 const Home = memo(() => {
+  useScrollEffects();
+
   return (
     <div className="relative min-h-screen bg-background text-foreground">
       <ThreeDScene />

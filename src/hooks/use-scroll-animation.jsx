@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState } from "react";
 
 export function useScrollAnimation(threshold = 0.1) {
   const [isVisible, setIsVisible] = useState(false);

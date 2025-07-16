@@ -101,8 +101,12 @@ export default function SkillsSection() {
   }, [isVisible, activeCategory]);
 
   return (
-    <section id="skills" className="py-20 relative overflow-hidden">
-      <div className="parallax-bg" />
+    <section
+      id="skills"
+      className="py-20 relative overflow-hidden"
+      style={{ zIndex: 25 }}
+    >
+      <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-background-secondary/50 to-background/50" />
 
       {/* Enhanced floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -135,7 +139,7 @@ export default function SkillsSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
           >
             Skills & Expertise
           </motion.h2>
@@ -239,7 +243,7 @@ export default function SkillsSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isVisible ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                className="glass-effect rounded-full px-8 py-4 hover-lift magnetic-effect bg-gradient-to-r from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
+                className="glass-effect rounded-full px-8 py-4 hover-lift bg-gradient-to-r from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
               >
                 <div className="flex items-center space-x-3">
                   <span className="text-2xl">{skill.icon}</span>

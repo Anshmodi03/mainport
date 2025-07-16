@@ -75,7 +75,7 @@ export default function LoadingScreen({ onLoadingComplete }) {
             >
               <h1 className="text-4xl sm:text-6xl font-bold font-space mb-2">
                 <span className="gradient-text bg-gradient-primary bg-clip-text text-transparent animate-gradient">
-                  Karthik
+                  Ansh Modi
                 </span>
               </h1>
               <p className="text-muted-foreground font-jetbrains text-sm sm:text-base">

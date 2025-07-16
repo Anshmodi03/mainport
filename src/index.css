@@ -822,6 +822,80 @@ body::before {
 .animate-loading-bounce {
   animation: loading-bounce 1.4s ease-in-out infinite both;
 }
+/* GSAP Animation Styles */
+.section-reveal {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%);
+}
+
+.text-reveal .char {
+  display: inline-block;
+  transform-origin: 50% 50%;
+}
+
+.image-reveal {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0% 100%);
+}
+
+.parallax-element {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.morphing-bg {
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 30% 40%,
+    rgba(99, 102, 241, 0.1),
+    transparent 70%
+  );
+}
+
+.float-complex {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.magnetic-scroll {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  cursor: pointer;
+}
+
+.progressive-load {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.progressive-item {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1000;
+}
+
+.counter {
+  font-variant-numeric: tabular-nums;
+}
+
+.animate-text {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.animate-card {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.particle-trigger {
+  position: relative;
+  overflow: visible;
+}
+
 /* Performance optimizations */
 * {
   will-change: auto;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import LoadingScreen from "./components/loading-screen.jsx";
+import { useGSAPScroll } from "./hooks/use-gsap-scroll.jsx";
 
 // Lazy load components for better performance
 const Home = lazy(() => import("./pages/home.jsx"));
@@ -34,6 +35,7 @@ function AppRouter() {
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const { initializeScrollAnimations } = useGSAPScroll();
 
   useEffect(() => {
     // Simulate initial app loading
@@ -43,6 +45,14 @@ function App() {
 
     return () => clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      // Initialize GSAP scroll animations after loading
+      const cleanup = initializeScrollAnimations();
+      return cleanup;
+    }
+  }, [isLoading, initializeScrollAnimations]);
 
   const handleLoadingComplete = () => {
     setIsLoading(false);

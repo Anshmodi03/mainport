@@ -55,8 +55,11 @@ export default function HeroSection() {
   }, [handleMouseMove]);
 
   useEffect(() => {
-    // Complex GSAP animations
-    const tl = gsap.timeline();
+    // Initialize GSAP animations
+    gsap.set([titleRef.current, subtitleRef.current, ctaRef.current], {
+      opacity: 1,
+      y: 0,
+    });
 
     // Magnetic effect for CTA buttons
     const buttons = ctaRef.current?.querySelectorAll("button, a");
@@ -86,29 +89,35 @@ export default function HeroSection() {
       scrub: 1,
       onUpdate: (self) => {
         const progress = self.progress;
-        gsap.set(titleRef.current, {
-          y: progress * 100,
-          opacity: 1 - progress * 0.5,
-        });
-        gsap.set(subtitleRef.current, {
-          y: progress * 150,
-          opacity: 1 - progress * 0.3,
-        });
+        if (titleRef.current) {
+          gsap.set(titleRef.current, {
+            y: progress * 100,
+            opacity: 1 - progress * 0.5,
+          });
+        }
+        if (subtitleRef.current) {
+          gsap.set(subtitleRef.current, {
+            y: progress * 150,
+            opacity: 1 - progress * 0.3,
+          });
+        }
       },
     });
 
     // Floating particles animation
     particlesRef.current.forEach((particle, i) => {
-      gsap.to(particle, {
-        y: `random(-100, 100)`,
-        x: `random(-100, 100)`,
-        rotation: `random(0, 360)`,
-        duration: `random(3, 6)`,
-        repeat: -1,
-        yoyo: true,
-        ease: "none",
-        delay: i * 0.1,
-      });
+      if (particle) {
+        gsap.to(particle, {
+          y: `random(-100, 100)`,
+          x: `random(-100, 100)`,
+          rotation: `random(0, 360)`,
+          duration: `random(3, 6)`,
+          repeat: -1,
+          yoyo: true,
+          ease: "none",
+          delay: i * 0.1,
+        });
+      }
     });
 
     return () => {
@@ -131,10 +140,11 @@ export default function HeroSection() {
     <section
       id="home"
       ref={heroRef}
-      className="min-h-screen flex items-center justify-center relative overflow-hidden z-10 px-4 sm:px-6 lg:px-8"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6 lg:px-8"
+      style={{ zIndex: 10 }}
     >
       {/* Enhanced background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-primary to-background-secondary opacity-95" />
+      <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary to-background opacity-95" />
 
       {/* Animated background elements - Hidden on mobile for better performance */}
       <div className="absolute inset-0 overflow-hidden hidden lg:block">
@@ -181,7 +191,7 @@ export default function HeroSection() {
         <div className="floating-element-slow absolute bottom-20 right-20 w-12 h-12 bg-gradient-to-r from-accent-secondary/40 to-accent/40 rounded-full blur-md" />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto text-center">
+      <div className="relative z-10 w-full max-w-7xl mx-auto text-center hero-content">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -225,10 +235,13 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold font-space leading-tight mt-8 sm:mt-12 md:mt-16"
+              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold font-space leading-tight mt-8 sm:mt-12 md:mt-16 animate-text parallax-element"
+              data-speed="0.2"
             >
-              <span className="block text-foreground mb-1">Hi, I'm</span>
-              <span className="block gradient-text text-shadow-glow animate-gradient bg-gradient-primary bg-clip-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+              <span className="block text-foreground mb-1 text-reveal">
+                Hi, I'm
+              </span>
+              <span className="block gradient-text text-shadow-glow animate-gradient bg-gradient-primary bg-clip-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-reveal">
                 Ansh Modi
               </span>
             </motion.h1>
@@ -238,9 +251,10 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium text-muted-foreground px-4"
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium text-muted-foreground px-4 animate-text parallax-element"
+              data-speed="0.3"
             >
-              <span className="font-jetbrains text-accent">
+              <span className="font-jetbrains text-accent text-reveal">
                 {currentTitle}
                 <span className="animate-pulse text-accent-secondary">|</span>
               </span>

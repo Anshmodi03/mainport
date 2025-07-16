@@ -10,10 +10,15 @@ const ThreeDScene = memo(() => {
   const [isLoaded, setIsLoaded] = useState(false);
   const { throttle } = usePerformanceOptimization();
 
-  // Minimal dark color palette
+  // Website-matching color palette
   const colorPalette = {
-    primary: new THREE.Color(0x4c1d95), // Deep purple
-    secondary: new THREE.Color(0x1e1b4b), // Dark indigo
+    primary: new THREE.Color(0x6366f1), // accent
+    secondary: new THREE.Color(0x8b5cf6), // accent-secondary
+    tertiary: new THREE.Color(0x06b6d4), // accent-tertiary
+    background: new THREE.Color(0x0a0b14), // background
+    backgroundSecondary: new THREE.Color(0x0f1127), // background-secondary
+    backgroundTertiary: new THREE.Color(0x151729), // background-tertiary
+    surface: new THREE.Color(0x1e1f38), // surface
   };
 
   const handleResize = useCallback(
@@ -58,7 +63,7 @@ const ThreeDScene = memo(() => {
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.4;
+    renderer.toneMappingExposure = 1.2;
 
     mountRef.current.appendChild(renderer.domElement);
 
@@ -66,56 +71,84 @@ const ThreeDScene = memo(() => {
     sceneRef.current = scene;
     rendererRef.current = renderer;
 
-    // Create darker fog for depth
-    scene.fog = new THREE.Fog(0x050517, 100, 800);
+    // Subtle fog matching website colors
+    scene.fog = new THREE.Fog(colorPalette.background.getHex(), 200, 1000);
 
-    // Darker ambient lighting
-    const ambientLight = new THREE.AmbientLight(0x1e1b4b, 0.15);
+    // Lighting setup with website colors
+    const ambientLight = new THREE.AmbientLight(
+      colorPalette.primary.getHex(),
+      0.3
+    );
     scene.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0x4c1d95, 0.3);
+    const directionalLight = new THREE.DirectionalLight(
+      colorPalette.secondary.getHex(),
+      0.6
+    );
     directionalLight.position.set(100, 100, 50);
     directionalLight.castShadow = true;
-    directionalLight.shadow.mapSize.width = 1024;
-    directionalLight.shadow.mapSize.height = 1024;
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
     scene.add(directionalLight);
 
-    // Minimal point lights
-    const pointLight1 = new THREE.PointLight(0x4c1d95, 0.25, 300);
-    pointLight1.position.set(-80, 80, 80);
+    // Dynamic point lights
+    const pointLight1 = new THREE.PointLight(
+      colorPalette.primary.getHex(),
+      0.8,
+      400
+    );
+    pointLight1.position.set(-100, 100, 100);
     scene.add(pointLight1);
 
-    const pointLight2 = new THREE.PointLight(0x1e1b4b, 0.2, 250);
-    pointLight2.position.set(80, -80, -80);
+    const pointLight2 = new THREE.PointLight(
+      colorPalette.tertiary.getHex(),
+      0.6,
+      350
+    );
+    pointLight2.position.set(100, -100, -100);
     scene.add(pointLight2);
 
-    // 1. Minimal geometric constellation
+    const pointLight3 = new THREE.PointLight(
+      colorPalette.secondary.getHex(),
+      0.7,
+      300
+    );
+    pointLight3.position.set(0, 200, 0);
+    scene.add(pointLight3);
+
+    // 1. Floating geometric constellation with website colors
     const geometries = [
-      new THREE.OctahedronGeometry(3, 1),
-      new THREE.IcosahedronGeometry(2.5, 1),
-      new THREE.TetrahedronGeometry(3.5, 0),
+      new THREE.OctahedronGeometry(4, 2),
+      new THREE.IcosahedronGeometry(3.5, 1),
+      new THREE.TetrahedronGeometry(4, 1),
+      new THREE.DodecahedronGeometry(3, 1),
+      new THREE.BoxGeometry(6, 6, 6),
     ];
 
     const shapes = [];
-    for (let i = 0; i < 12; i++) {
+    const colorKeys = Object.keys(colorPalette).slice(0, 3); // primary, secondary, tertiary
+
+    for (let i = 0; i < 20; i++) {
       const geometry = geometries[i % geometries.length];
-      const colorKeys = Object.keys(colorPalette);
       const selectedColor = colorPalette[colorKeys[i % colorKeys.length]];
 
-      const material = new THREE.MeshPhongMaterial({
+      const material = new THREE.MeshPhysicalMaterial({
         color: selectedColor,
         transparent: true,
-        opacity: 0.25,
-        shininess: 100,
-        specular: 0x333333,
-        emissive: selectedColor.clone().multiplyScalar(0.05),
+        opacity: 0.4,
+        roughness: 0.2,
+        metalness: 0.8,
+        clearcoat: 1.0,
+        clearcoatRoughness: 0.1,
+        emissive: selectedColor.clone().multiplyScalar(0.1),
+        envMapIntensity: 0.8,
       });
 
       const mesh = new THREE.Mesh(geometry, material);
       mesh.position.set(
+        (Math.random() - 0.5) * 600,
         (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 400
+        (Math.random() - 0.5) * 600
       );
       mesh.rotation.set(
         Math.random() * Math.PI,
@@ -123,23 +156,28 @@ const ThreeDScene = memo(() => {
         Math.random() * Math.PI
       );
 
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+
       shapes.push({
         mesh,
         rotationSpeed: {
-          x: (Math.random() - 0.5) * 0.03,
-          y: (Math.random() - 0.5) * 0.03,
-          z: (Math.random() - 0.5) * 0.03,
+          x: (Math.random() - 0.5) * 0.02,
+          y: (Math.random() - 0.5) * 0.02,
+          z: (Math.random() - 0.5) * 0.02,
         },
-        floatSpeed: Math.random() * 0.015 + 0.008,
-        floatRange: Math.random() * 30 + 15,
+        floatSpeed: Math.random() * 0.01 + 0.005,
+        floatRange: Math.random() * 40 + 20,
         initialY: mesh.position.y,
-        pulseFactor: Math.random() * 0.5 + 0.5,
+        pulseFactor: Math.random() * 0.3 + 0.7,
+        orbitRadius: Math.random() * 50 + 100,
+        orbitSpeed: Math.random() * 0.005 + 0.002,
       });
 
       scene.add(mesh);
     }
 
-    // 2. Multi-layered particle systems with different colors
+    // 2. Enhanced particle systems with website colors
     const createParticleSystem = (
       count,
       color,
@@ -152,32 +190,42 @@ const ThreeDScene = memo(() => {
       const velocities = new Float32Array(count * 3);
       const scales = new Float32Array(count);
       const colors = new Float32Array(count * 3);
+      const lifetimes = new Float32Array(count);
 
       for (let i = 0; i < count * 3; i += 3) {
         if (pattern === "spiral") {
-          const radius = (i / (count * 3)) * 300;
-          const angle = (i / (count * 3)) * Math.PI * 10;
+          const radius = (i / (count * 3)) * 400;
+          const angle = (i / (count * 3)) * Math.PI * 12;
           positions[i] = Math.cos(angle) * radius;
-          positions[i + 1] = (Math.random() - 0.5) * 100;
+          positions[i + 1] = (Math.random() - 0.5) * 200;
           positions[i + 2] = Math.sin(angle) * radius;
+        } else if (pattern === "sphere") {
+          const radius = 300 + Math.random() * 200;
+          const theta = Math.random() * Math.PI * 2;
+          const phi = Math.random() * Math.PI;
+          positions[i] = radius * Math.sin(phi) * Math.cos(theta);
+          positions[i + 1] = radius * Math.cos(phi);
+          positions[i + 2] = radius * Math.sin(phi) * Math.sin(theta);
         } else {
-          positions[i] = (Math.random() - 0.5) * 500;
-          positions[i + 1] = (Math.random() - 0.5) * 500;
-          positions[i + 2] = (Math.random() - 0.5) * 500;
+          positions[i] = (Math.random() - 0.5) * 800;
+          positions[i + 1] = (Math.random() - 0.5) * 600;
+          positions[i + 2] = (Math.random() - 0.5) * 800;
         }
 
         velocities[i] = (Math.random() - 0.5) * speed;
         velocities[i + 1] = (Math.random() - 0.5) * speed;
         velocities[i + 2] = (Math.random() - 0.5) * speed;
 
-        // Color variation
-        colors[i] = color.r + (Math.random() - 0.5) * 0.3;
-        colors[i + 1] = color.g + (Math.random() - 0.5) * 0.3;
-        colors[i + 2] = color.b + (Math.random() - 0.5) * 0.3;
+        // Enhanced color variation
+        colors[i] = color.r + (Math.random() - 0.5) * 0.2;
+        colors[i + 1] = color.g + (Math.random() - 0.5) * 0.2;
+        colors[i + 2] = color.b + (Math.random() - 0.5) * 0.2;
+
+        lifetimes[i / 3] = Math.random();
       }
 
       for (let i = 0; i < count; i++) {
-        scales[i] = Math.random() * 1.5 + 0.5;
+        scales[i] = Math.random() * 2 + 0.5;
       }
 
       geometry.setAttribute(
@@ -190,7 +238,7 @@ const ThreeDScene = memo(() => {
       const material = new THREE.PointsMaterial({
         size: size,
         transparent: true,
-        opacity: 0.35,
+        opacity: 0.6,
         blending: THREE.AdditiveBlending,
         depthWrite: false,
         sizeAttenuation: true,
@@ -198,146 +246,160 @@ const ThreeDScene = memo(() => {
       });
 
       const points = new THREE.Points(geometry, material);
-      return { points, velocities };
+      return { points, velocities, lifetimes };
     };
 
-    // Minimal particle systems
+    // Multiple particle systems with website colors
     const particleSystems = [
-      createParticleSystem(800, colorPalette.primary, 2.5, 0.02),
-      createParticleSystem(500, colorPalette.secondary, 2, 0.018, "spiral"),
+      createParticleSystem(1200, colorPalette.primary, 3, 0.015),
+      createParticleSystem(800, colorPalette.secondary, 2.5, 0.012, "spiral"),
+      createParticleSystem(600, colorPalette.tertiary, 2, 0.018, "sphere"),
     ];
 
     particleSystems.forEach(({ points }) => scene.add(points));
 
-    // 3. Enhanced energy field with multiple colors
-    const createEnergyField = () => {
-      const fieldGeometry = new THREE.BufferGeometry();
-      const fieldCount = 2000;
-      const fieldPositions = new Float32Array(fieldCount * 3);
-      const fieldColors = new Float32Array(fieldCount * 3);
+    // 3. Interconnected energy grid
+    const createEnergyGrid = () => {
+      const gridGroup = new THREE.Group();
+      const gridSize = 15;
+      const spacing = 40;
 
-      const colorArray = Object.values(colorPalette);
+      for (let x = 0; x < gridSize; x++) {
+        for (let z = 0; z < gridSize; z++) {
+          const nodeGeometry = new THREE.SphereGeometry(1, 8, 8);
+          const nodeMaterial = new THREE.MeshPhysicalMaterial({
+            color: colorPalette.primary,
+            emissive: colorPalette.primary.clone().multiplyScalar(0.3),
+            transparent: true,
+            opacity: 0.8,
+          });
 
-      for (let i = 0; i < fieldCount; i++) {
-        const radius = Math.random() * 300 + 50;
-        const theta = Math.random() * Math.PI * 2;
-        const phi = Math.random() * Math.PI;
+          const node = new THREE.Mesh(nodeGeometry, nodeMaterial);
+          node.position.set(
+            (x - gridSize / 2) * spacing,
+            Math.sin((x + z) * 0.5) * 20,
+            (z - gridSize / 2) * spacing
+          );
 
-        fieldPositions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
-        fieldPositions[i * 3 + 1] = radius * Math.cos(phi);
-        fieldPositions[i * 3 + 2] = radius * Math.sin(phi) * Math.sin(theta);
+          gridGroup.add(node);
 
-        const color = colorArray[i % colorArray.length];
-        fieldColors[i * 3] = color.r;
-        fieldColors[i * 3 + 1] = color.g;
-        fieldColors[i * 3 + 2] = color.b;
+          // Connect nodes with lines
+          if (x < gridSize - 1) {
+            const lineGeometry = new THREE.BufferGeometry();
+            const linePositions = new Float32Array(6);
+            linePositions[0] = node.position.x;
+            linePositions[1] = node.position.y;
+            linePositions[2] = node.position.z;
+            linePositions[3] = node.position.x + spacing;
+            linePositions[4] = Math.sin((x + 1 + z) * 0.5) * 20;
+            linePositions[5] = node.position.z;
+
+            lineGeometry.setAttribute(
+              "position",
+              new THREE.BufferAttribute(linePositions, 3)
+            );
+
+            const lineMaterial = new THREE.LineBasicMaterial({
+              color: colorPalette.tertiary,
+              transparent: true,
+              opacity: 0.3,
+            });
+
+            const line = new THREE.Line(lineGeometry, lineMaterial);
+            gridGroup.add(line);
+          }
+        }
       }
 
-      fieldGeometry.setAttribute(
-        "position",
-        new THREE.BufferAttribute(fieldPositions, 3)
-      );
-      fieldGeometry.setAttribute(
-        "color",
-        new THREE.BufferAttribute(fieldColors, 3)
-      );
-
-      const fieldMaterial = new THREE.PointsMaterial({
-        size: 1.5,
-        transparent: true,
-        opacity: 0.25,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        vertexColors: true,
-      });
-
-      return new THREE.Points(fieldGeometry, fieldMaterial);
+      gridGroup.position.y = -200;
+      return gridGroup;
     };
 
-    const energyField = createEnergyField();
-    scene.add(energyField);
+    const energyGrid = createEnergyGrid();
+    scene.add(energyGrid);
 
-    // 4. Subtle energy rings
-    const rings = [];
-    const ringColors = Object.values(colorPalette);
-    for (let i = 0; i < 4; i++) {
-      const ringGeometry = new THREE.RingGeometry(40 + i * 20, 44 + i * 20, 64);
-      const ringMaterial = new THREE.MeshBasicMaterial({
-        color: ringColors[i % ringColors.length],
-        transparent: true,
-        opacity: 0.1,
-        side: THREE.DoubleSide,
-        blending: THREE.AdditiveBlending,
-      });
-
-      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
-      ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.3;
-      ring.rotation.y = (Math.random() - 0.5) * 0.3;
-      ring.position.y = (i - 4) * 40;
-      rings.push({
-        mesh: ring,
-        speed: 0.008 + i * 0.003,
-        direction: i % 2 === 0 ? 1 : -1,
-        baseOpacity: 0.08 + i * 0.01,
-      });
-      scene.add(ring);
-    }
-
-    // 5. Floating orbs with inner glow
+    // 4. Floating energy orbs
     const orbs = [];
-    for (let i = 0; i < 6; i++) {
-      const orbGeometry = new THREE.SphereGeometry(8, 16, 16);
-      const orbMaterial = new THREE.MeshPhongMaterial({
-        color:
-          Object.values(colorPalette)[i % Object.values(colorPalette).length],
+    for (let i = 0; i < 12; i++) {
+      const orbGeometry = new THREE.SphereGeometry(8, 32, 32);
+      const orbMaterial = new THREE.MeshPhysicalMaterial({
+        color: Object.values(colorPalette)[i % 3],
         transparent: true,
-        opacity: 0.2,
+        opacity: 0.4,
+        roughness: 0.1,
+        metalness: 0.9,
+        clearcoat: 1.0,
         emissive: Object.values(colorPalette)
-          [i % Object.values(colorPalette).length].clone()
-          .multiplyScalar(0.1),
-        shininess: 100,
+          [i % 3].clone()
+          .multiplyScalar(0.2),
+        envMapIntensity: 1.0,
       });
 
       const orb = new THREE.Mesh(orbGeometry, orbMaterial);
       orb.position.set(
-        (Math.random() - 0.5) * 600,
+        (Math.random() - 0.5) * 800,
         (Math.random() - 0.5) * 400,
-        (Math.random() - 0.5) * 600
+        (Math.random() - 0.5) * 800
       );
 
       orbs.push({
         mesh: orb,
-        speed: Math.random() * 0.01 + 0.005,
-        radius: Math.random() * 100 + 200,
+        speed: Math.random() * 0.008 + 0.003,
+        radius: Math.random() * 150 + 250,
         angle: Math.random() * Math.PI * 2,
         height: orb.position.y,
+        pulseFactor: Math.random() * 0.5 + 0.5,
       });
 
       scene.add(orb);
     }
 
+    // 5. Plasma rings with website colors
+    const rings = [];
+    const ringCount = 6;
+    for (let i = 0; i < ringCount; i++) {
+      const ringGeometry = new THREE.TorusGeometry(60 + i * 25, 3, 16, 100);
+      const ringMaterial = new THREE.MeshPhysicalMaterial({
+        color: Object.values(colorPalette)[i % 3],
+        transparent: true,
+        opacity: 0.25,
+        roughness: 0.1,
+        metalness: 0.8,
+        emissive: Object.values(colorPalette)
+          [i % 3].clone()
+          .multiplyScalar(0.1),
+      });
+
+      const ring = new THREE.Mesh(ringGeometry, ringMaterial);
+      ring.rotation.x = Math.PI / 2 + (Math.random() - 0.5) * 0.5;
+      ring.rotation.y = (Math.random() - 0.5) * 0.5;
+      ring.position.y = (i - ringCount / 2) * 60;
+
+      rings.push({
+        mesh: ring,
+        speed: 0.005 + i * 0.002,
+        direction: i % 2 === 0 ? 1 : -1,
+        baseOpacity: 0.15 + i * 0.02,
+        wobbleSpeed: Math.random() * 0.01 + 0.005,
+      });
+
+      scene.add(ring);
+    }
+
     // Position camera
-    camera.position.set(0, 0, 200);
+    camera.position.set(0, 0, 300);
 
     // Enhanced mouse interaction
     const mouse = new THREE.Vector2();
+    const targetCameraPos = new THREE.Vector3();
 
     const handleMouseMove = (event) => {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
 
-      // Smooth camera movement
-      camera.position.x = THREE.MathUtils.lerp(
-        camera.position.x,
-        mouse.x * 30,
-        0.05
-      );
-      camera.position.y = THREE.MathUtils.lerp(
-        camera.position.y,
-        mouse.y * 30,
-        0.05
-      );
-      camera.lookAt(0, 0, 0);
+      targetCameraPos.x = mouse.x * 50;
+      targetCameraPos.y = mouse.y * 50;
+      targetCameraPos.z = 300;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -351,77 +413,121 @@ const ThreeDScene = memo(() => {
       const deltaTime = clock.getDelta();
       time += deltaTime;
 
-      // Animate geometric shapes with pulsing
+      // Smooth camera movement
+      camera.position.lerp(targetCameraPos, 0.02);
+      camera.lookAt(0, 0, 0);
+
+      // Animate geometric shapes with enhanced movement
       shapes.forEach((shape, index) => {
         shape.mesh.rotation.x += shape.rotationSpeed.x;
         shape.mesh.rotation.y += shape.rotationSpeed.y;
         shape.mesh.rotation.z += shape.rotationSpeed.z;
 
-        // Enhanced floating motion with pulsing
+        // Complex floating motion
+        const timeOffset = time * shape.floatSpeed + index;
         shape.mesh.position.y =
-          shape.initialY +
-          Math.sin(time * shape.floatSpeed + index) * shape.floatRange;
+          shape.initialY + Math.sin(timeOffset) * shape.floatRange;
 
-        // Pulsing effect
-        const pulse = 1 + Math.sin(time * 2 + index) * 0.1 * shape.pulseFactor;
+        // Orbital motion
+        const orbitX =
+          Math.cos(time * shape.orbitSpeed + index) * shape.orbitRadius;
+        const orbitZ =
+          Math.sin(time * shape.orbitSpeed + index) * shape.orbitRadius;
+        shape.mesh.position.x += orbitX * 0.01;
+        shape.mesh.position.z += orbitZ * 0.01;
+
+        // Enhanced pulsing
+        const pulse = 1 + Math.sin(time * 2 + index) * 0.15 * shape.pulseFactor;
         shape.mesh.scale.setScalar(pulse);
 
-        // Dynamic opacity
-        shape.mesh.material.opacity = 0.2 + Math.sin(time * 1.5 + index) * 0.1;
+        // Dynamic opacity and emissive
+        const opacity = 0.3 + Math.sin(time * 1.5 + index) * 0.15;
+        shape.mesh.material.opacity = opacity;
+        shape.mesh.material.emissiveIntensity =
+          0.1 + Math.sin(time * 2 + index) * 0.05;
       });
 
-      // Animate particle systems
-      particleSystems.forEach(({ points, velocities }, systemIndex) => {
-        const positions = points.geometry.attributes.position.array;
+      // Animate particle systems with enhanced effects
+      particleSystems.forEach(
+        ({ points, velocities, lifetimes }, systemIndex) => {
+          const positions = points.geometry.attributes.position.array;
+          const colors = points.geometry.attributes.color.array;
 
-        for (let i = 0; i < positions.length; i += 3) {
-          positions[i] += velocities[i];
-          positions[i + 1] += velocities[i + 1];
-          positions[i + 2] += velocities[i + 2];
+          for (let i = 0; i < positions.length; i += 3) {
+            positions[i] += velocities[i] * (1 + Math.sin(time + i) * 0.1);
+            positions[i + 1] +=
+              velocities[i + 1] * (1 + Math.cos(time + i) * 0.1);
+            positions[i + 2] +=
+              velocities[i + 2] * (1 + Math.sin(time + i) * 0.1);
 
-          // Enhanced boundary wrapping
-          if (Math.abs(positions[i]) > 250) velocities[i] *= -1;
-          if (Math.abs(positions[i + 1]) > 250) velocities[i + 1] *= -1;
-          if (Math.abs(positions[i + 2]) > 250) velocities[i + 2] *= -1;
+            // Enhanced boundary wrapping with smooth transitions
+            if (Math.abs(positions[i]) > 400) velocities[i] *= -0.8;
+            if (Math.abs(positions[i + 1]) > 300) velocities[i + 1] *= -0.8;
+            if (Math.abs(positions[i + 2]) > 400) velocities[i + 2] *= -0.8;
+
+            // Color animation
+            const colorIndex = i / 3;
+            const colorIntensity = 0.5 + Math.sin(time * 2 + colorIndex) * 0.3;
+            colors[i] *= colorIntensity;
+            colors[i + 1] *= colorIntensity;
+            colors[i + 2] *= colorIntensity;
+          }
+
+          points.geometry.attributes.position.needsUpdate = true;
+          points.geometry.attributes.color.needsUpdate = true;
+
+          points.rotation.y += 0.001 * (systemIndex + 1);
+          points.rotation.x += 0.0005 * Math.sin(time + systemIndex);
         }
+      );
 
-        points.geometry.attributes.position.needsUpdate = true;
-        points.rotation.y += 0.002 * (systemIndex + 1);
-        points.rotation.x += 0.001 * Math.sin(time + systemIndex);
-      });
+      // Animate energy grid
+      energyGrid.rotation.y += 0.002;
+      energyGrid.position.y = -200 + Math.sin(time * 0.5) * 20;
 
-      // Animate energy field
-      energyField.rotation.y += 0.008;
-      energyField.rotation.x += 0.003;
-
-      // Animate rings with enhanced effects
+      // Animate plasma rings with enhanced effects
       rings.forEach((ring, index) => {
         ring.mesh.rotation.z += ring.speed * ring.direction;
-        ring.mesh.rotation.x += 0.002 * Math.sin(time + index);
-        ring.mesh.material.opacity =
-          ring.baseOpacity + Math.sin(time * 3 + index) * 0.1;
+        ring.mesh.rotation.x += ring.wobbleSpeed * Math.sin(time + index);
+        ring.mesh.rotation.y += ring.wobbleSpeed * Math.cos(time + index);
+
+        const opacityWave = ring.baseOpacity + Math.sin(time * 3 + index) * 0.1;
+        ring.mesh.material.opacity = opacityWave;
+        ring.mesh.material.emissiveIntensity =
+          0.1 + Math.sin(time * 2 + index) * 0.05;
       });
 
-      // Animate floating orbs
+      // Animate floating orbs with complex motion
       orbs.forEach((orb, index) => {
         orb.angle += orb.speed;
-        orb.mesh.position.x = Math.cos(orb.angle) * orb.radius;
-        orb.mesh.position.z = Math.sin(orb.angle) * orb.radius;
-        orb.mesh.position.y = orb.height + Math.sin(time * 2 + index) * 50;
+        orb.mesh.position.x =
+          Math.cos(orb.angle) * orb.radius + Math.sin(time * 0.5 + index) * 50;
+        orb.mesh.position.z =
+          Math.sin(orb.angle) * orb.radius + Math.cos(time * 0.3 + index) * 50;
+        orb.mesh.position.y = orb.height + Math.sin(time * 1.5 + index) * 60;
 
-        // Rotation
-        orb.mesh.rotation.y += 0.01;
+        // Complex rotation
+        orb.mesh.rotation.y += 0.008;
         orb.mesh.rotation.x += 0.005;
+        orb.mesh.rotation.z += 0.003;
+
+        // Pulsing scale
+        const pulse = orb.pulseFactor + Math.sin(time * 2 + index) * 0.2;
+        orb.mesh.scale.setScalar(pulse);
       });
 
-      // Subtle dynamic lighting
-      pointLight1.position.x = Math.sin(time * 0.5) * 120;
-      pointLight1.position.z = Math.cos(time * 0.5) * 120;
-      pointLight1.intensity = 0.25 + Math.sin(time * 1.5) * 0.05;
+      // Dynamic lighting animation
+      pointLight1.position.x = Math.sin(time * 0.7) * 150;
+      pointLight1.position.z = Math.cos(time * 0.7) * 150;
+      pointLight1.intensity = 0.8 + Math.sin(time * 2) * 0.2;
 
-      pointLight2.position.x = Math.cos(time * 0.3) * 100;
-      pointLight2.position.y = Math.sin(time * 0.3) * 100;
-      pointLight2.intensity = 0.2 + Math.cos(time * 1.2) * 0.05;
+      pointLight2.position.x = Math.cos(time * 0.5) * 120;
+      pointLight2.position.y = Math.sin(time * 0.5) * 120;
+      pointLight2.intensity = 0.6 + Math.cos(time * 1.8) * 0.2;
+
+      pointLight3.position.x = Math.sin(time * 0.3) * 100;
+      pointLight3.position.z = Math.cos(time * 0.3) * 100;
+      pointLight3.intensity = 0.7 + Math.sin(time * 1.5) * 0.2;
 
       // Render
       renderer.render(scene, camera);
@@ -444,7 +550,7 @@ const ThreeDScene = memo(() => {
         mountRef.current.removeChild(renderer.domElement);
       }
 
-      // Cleanup
+      // Comprehensive cleanup
       shapes.forEach((shape) => {
         scene.remove(shape.mesh);
         shape.mesh.geometry.dispose();
@@ -469,9 +575,11 @@ const ThreeDScene = memo(() => {
         orb.mesh.material.dispose();
       });
 
-      scene.remove(energyField);
-      energyField.geometry.dispose();
-      energyField.material.dispose();
+      scene.remove(energyGrid);
+      energyGrid.traverse((child) => {
+        if (child.geometry) child.geometry.dispose();
+        if (child.material) child.material.dispose();
+      });
 
       renderer.dispose();
     };
@@ -483,8 +591,10 @@ const ThreeDScene = memo(() => {
       className="fixed inset-0 -z-10 overflow-hidden"
       style={{
         pointerEvents: "none",
-        background:
-          "radial-gradient(ellipse at center, rgba(15, 23, 42, 0.4) 0%, rgba(2, 6, 23, 0.7) 100%)",
+        background: `radial-gradient(ellipse at center, 
+          rgba(10, 11, 20, 0.8) 0%, 
+          rgba(15, 17, 39, 0.9) 50%, 
+          rgba(21, 23, 41, 0.95) 100%)`,
       }}
     />
   );

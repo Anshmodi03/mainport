@@ -100,10 +100,18 @@ const Navigation = memo(() => {
             className="flex items-center cursor-pointer group"
             onClick={() => scrollToSection("home")}
           >
-            <div className="w-12 h-12 bg-gradient-to-r from-accent to-accent-secondary rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg">
-              <span className="text-white font-bold font-jetbrains text-xl">
-                K
-              </span>
+            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg overflow-hidden">
+              {/* Replace with your image path - currently using logo.jpg from root */}
+              <img
+                src="/logo.png"
+                alt="Logo"
+                className="w-full h-full object-cover rounded-2xl"
+                onError={(e) => {
+                  // Fallback to text if image fails to load
+                  e.target.style.display = "none";
+                  e.target.nextSibling.style.display = "block";
+                }}
+              />
             </div>
             <div className="flex items-center">
               <span className="text-2xl font-bold font-space gradient-text">
