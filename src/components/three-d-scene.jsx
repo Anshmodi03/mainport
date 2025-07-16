@@ -42,6 +42,13 @@ const ThreeDScene = memo(() => {
   useEffect(() => {
     if (!mountRef.current) return;
 
+    // Determine low-end status and detail settings
+    const isLowEnd =
+      navigator.deviceMemory < 4 || navigator.hardwareConcurrency <= 4;
+    const pixelRatio = Math.min(window.devicePixelRatio, isLowEnd ? 1 : 2);
+    const geometryDetail = isLowEnd ? 8 : 16;
+    const particleCount = isLowEnd ? 600 : 1200;
+
     // Enhanced scene setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(
@@ -52,18 +59,27 @@ const ThreeDScene = memo(() => {
     );
 
     const renderer = new THREE.WebGLRenderer({
-      antialias: true,
+      antialias: !isLowEnd,
       alpha: true,
-      powerPreference: "high-performance",
+      powerPreference: isLowEnd ? "default" : "high-performance",
+      stencil: false,
+      depth: true,
     });
-
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    renderer.setClearColor(0x000000, 0);
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.2;
+    renderer.setPixelRatio(pixelRatio);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = isLowEnd
+      ? THREE.LinearToneMapping
+      : THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1;
+    renderer.shadowMap.enabled = !isLowEnd;
+    if (!isLowEnd) {
+      renderer.shadowMap.type = THREE.PCFShadowMap;
+    }
+
+    // Performance optimizations
+    renderer.info.autoReset = false;
+    renderer.sortObjects = false;
 
     mountRef.current.appendChild(renderer.domElement);
 

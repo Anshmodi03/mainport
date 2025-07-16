@@ -146,6 +146,10 @@ export default function HeroSection() {
       {/* Enhanced background gradient */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary to-background opacity-95" />
 
+      {/* Additional atmospheric layers */}
+      <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent-secondary/5" />
+      <div className="absolute inset-0 bg-radial-gradient from-accent/10 via-transparent to-transparent" />
+
       {/* Animated background elements - Hidden on mobile for better performance */}
       <div className="absolute inset-0 overflow-hidden hidden lg:block">
         <div
@@ -238,12 +242,98 @@ export default function HeroSection() {
               className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold font-space leading-tight mt-8 sm:mt-12 md:mt-16 animate-text parallax-element"
               data-speed="0.2"
             >
-              <span className="block text-foreground mb-1 text-reveal">
+              <motion.span
+                className="block text-foreground mb-1"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 Hi, I'm
-              </span>
-              <span className="block gradient-text text-shadow-glow animate-gradient bg-gradient-primary bg-clip-text text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-reveal">
-                Ansh Modi
-              </span>
+              </motion.span>
+              <motion.div
+                className="relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 1.2,
+                  delay: 0.7,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                }}
+              >
+                <motion.span
+                  className="relative inline-block font-bold"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.9 }}
+                >
+                  {/* Split text into individual letters for staggered animation */}
+                  {"Ansh Modi".split("").map((letter, index) => (
+                    <motion.span
+                      key={index}
+                      className="inline-block text-foreground hover:text-accent transition-colors duration-200 cursor-default will-change-transform"
+                      initial={{ opacity: 0, y: 20, rotateX: -90 }}
+                      animate={{ opacity: 1, y: 0, rotateX: 0 }}
+                      transition={{
+                        duration: 0.4, // Reduced duration
+                        delay: 1 + index * 0.08, // Reduced delay
+                        type: "spring",
+                        stiffness: 300, // Increased for snappier animation
+                        damping: 15,
+                      }}
+                      whileHover={{
+                        y: -6, // Reduced movement
+                        transition: { duration: 0.2, ease: "easeOut" },
+                      }}
+                      style={{
+                        display: letter === " " ? "inline" : "inline-block",
+                        width: letter === " " ? "0.5em" : "auto",
+                        transform: "translateZ(0)", // Force hardware acceleration
+                      }}
+                    >
+                      {letter === " " ? "\u00A0" : letter}
+                    </motion.span>
+                  ))}
+
+                  {/* Subtle underline accent */}
+                  <motion.div
+                    className="absolute -bottom-2 left-0 h-1 bg-gradient-to-r from-accent to-accent-secondary rounded-full"
+                    initial={{ width: 0, opacity: 0 }}
+                    animate={{ width: "100%", opacity: 1 }}
+                    transition={{
+                      duration: 0.8,
+                      delay: 2.5,
+                      ease: "easeOut",
+                    }}
+                  />
+
+                  {/* Decorative elements */}
+                  <motion.div
+                    className="absolute -top-4 -right-4 w-3 h-3 bg-accent rounded-full"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: 3,
+                      type: "spring",
+                      stiffness: 300,
+                    }}
+                  />
+
+                  <motion.div
+                    className="absolute -bottom-6 -left-2 w-2 h-2 bg-accent-secondary rounded-full"
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{
+                      duration: 0.4,
+                      delay: 3.2,
+                      type: "spring",
+                      stiffness: 300,
+                    }}
+                  />
+                </motion.span>
+              </motion.div>
             </motion.h1>
 
             <motion.div
@@ -288,22 +378,39 @@ export default function HeroSection() {
             transition={{ duration: 0.8, delay: 1.0 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 md:gap-8 px-4"
           >
-            <Button
-              className="liquid-button w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-medium hover-lift rounded-xl"
-              onClick={() => scrollToSection("projects")}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
-              <Play className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
-              View My Work
-            </Button>
+              <Button
+                className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-medium rounded-xl relative overflow-hidden group bg-gradient-to-r from-accent via-accent-secondary to-accent bg-size-200 bg-pos-0 hover:bg-pos-100 transition-all duration-500 text-white shadow-2xl shadow-accent/30 border-0"
+                onClick={() => scrollToSection("projects")}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/80 via-accent-secondary/80 to-accent/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <Play className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 relative z-10" />
+                <span className="relative z-10">View My Work</span>
+              </Button>
+            </motion.div>
 
-            <Button
-              variant="outline"
-              className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-medium glow-border hover-lift rounded-xl"
-              onClick={() => scrollToSection("contact")}
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="w-full sm:w-auto"
             >
-              <Mail className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3" />
-              Get In Touch
-            </Button>
+              <Button
+                variant="outline"
+                className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 text-base sm:text-lg font-medium rounded-xl relative overflow-hidden group border-2 border-accent/40 bg-transparent hover:bg-gradient-to-r hover:from-accent/10 hover:to-accent-secondary/10 text-white hover:border-accent transition-all duration-300 shadow-lg shadow-accent-secondary/20"
+                onClick={() => scrollToSection("contact")}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/10 to-transparent -skew-x-12 transform -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
+                <Mail className="w-5 h-5 sm:w-6 sm:h-6 mr-2 sm:mr-3 relative z-10 text-accent group-hover:text-white transition-colors duration-300" />
+                <span className="relative z-10 text-accent group-hover:text-white transition-colors duration-300">
+                  Get In Touch
+                </span>
+              </Button>
+            </motion.div>
           </motion.div>
 
           {/* Enhanced Social Links */}
@@ -311,42 +418,52 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.4 }}
-            className="flex items-center justify-center space-x-6 sm:space-x-8 mt-6 sm:mt-8 px-4"
+            className="flex items-center justify-center space-x-6 sm:space-x-8 mt-8 sm:mt-10 px-4"
           >
             {[
               {
                 icon: Github,
                 href: "https://github.com/Anshmodi03",
                 label: "GitHub",
-                color: "text-foreground hover:text-accent",
+                color: "from-gray-400 to-gray-200",
+                hoverColor: "from-accent to-accent-secondary",
               },
               {
                 icon: Linkedin,
                 href: "https://www.linkedin.com/in/ansh-modi-/",
                 label: "LinkedIn",
-                color: "text-foreground hover:text-accent-secondary",
+                color: "from-blue-400 to-blue-200",
+                hoverColor: "from-accent-secondary to-accent",
               },
               {
                 icon: Mail,
                 href: "mailto:modiaastha01@gmail.com",
                 label: "Email",
-                color: "text-foreground hover:text-accent",
+                color: "from-green-400 to-green-200",
+                hoverColor: "from-accent to-accent-secondary",
               },
               {
                 icon: FileText,
                 label: "Resume",
-                color: "text-foreground hover:text-accent-secondary",
+                color: "from-purple-400 to-purple-200",
+                hoverColor: "from-accent-secondary to-accent",
                 isResumeButton: true,
               },
             ].map((social, index) => (
               <motion.div
                 key={social.label}
-                whileHover={{ scale: 1.3, rotate: 5 }}
+                whileHover={{ scale: 1.2, y: -5 }}
                 whileTap={{ scale: 0.9 }}
                 className="group relative cursor-pointer"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 1.5 + index * 0.1 }}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{
+                  duration: 0.6,
+                  delay: 1.5 + index * 0.1,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 15,
+                }}
                 onClick={
                   social.isResumeButton
                     ? () => setShowResumePopup(true)
@@ -354,10 +471,10 @@ export default function HeroSection() {
                 }
               >
                 {social.isResumeButton ? (
-                  <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:from-accent/30 group-hover:to-accent-secondary/30 transition-all duration-300 magnetic-effect glow-border">
-                    <social.icon
-                      className={`w-6 h-6 sm:w-7 sm:h-7 ${social.color} transition-all duration-300`}
-                    />
+                  <div
+                    className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
+                  >
+                    <social.icon className="w-7 h-7 sm:w-8 sm:h-8 text-background transition-all duration-300 group-hover:scale-110" />
                   </div>
                 ) : (
                   <a
@@ -372,16 +489,20 @@ export default function HeroSection() {
                     }
                     className="block"
                   >
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-xl flex items-center justify-center backdrop-blur-sm group-hover:from-accent/30 group-hover:to-accent-secondary/30 transition-all duration-300 magnetic-effect glow-border">
-                      <social.icon
-                        className={`w-6 h-6 sm:w-7 sm:h-7 ${social.color} transition-all duration-300`}
-                      />
+                    <div
+                      className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
+                    >
+                      <social.icon className="w-7 h-7 sm:w-8 sm:h-8 text-background transition-all duration-300 group-hover:scale-110" />
                     </div>
                   </a>
                 )}
-                <span className="absolute -bottom-8 sm:-bottom-10 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity duration-300 font-medium whitespace-nowrap">
+                <motion.span
+                  className="absolute -bottom-10 sm:-bottom-12 left-1/2 transform -translate-x-1/2 text-xs sm:text-sm text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300 font-medium whitespace-nowrap bg-background/80 backdrop-blur-sm px-3 py-1 rounded-lg border border-accent/20"
+                  initial={{ y: 10 }}
+                  whileHover={{ y: 0 }}
+                >
                   {social.label}
-                </span>
+                </motion.span>
               </motion.div>
             ))}
           </motion.div>

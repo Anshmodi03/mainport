@@ -181,14 +181,13 @@ export default function ExperienceSection() {
 
   return (
     <section id="experience" className="py-20 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-background/95 via-background-secondary/95 to-background/95" />
+      <div className="parallax-bg" />
 
       {/* Enhanced floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-32 right-20 w-32 h-32 bg-accent/8 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-32 left-20 w-40 h-40 bg-accent-secondary/8 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/4 left-1/4 w-24 h-24 bg-gradient-to-r from-accent/10 to-accent-secondary/10 rounded-full blur-2xl" />
-        <div className="floating-element absolute bottom-1/4 right-1/4 w-28 h-28 bg-gradient-to-r from-accent-secondary/10 to-accent/10 rounded-full blur-2xl" />
+        <div className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl" />
+        <div className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl" />
+        <div className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl" />
       </div>
 
       <div

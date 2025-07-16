@@ -25,64 +25,200 @@ export default function SkillsSection() {
     frontend: {
       title: "Frontend Development",
       icon: Globe,
-      color: "from-accent/20 to-accent-secondary/20",
+      color: "from-blue-500/20 via-purple-500/20 to-cyan-500/20",
+      borderColor: "border-blue-500/30",
+      accentColor: "text-blue-400",
       skills: [
-        { name: "React", level: 95, icon: "⚛️" },
-        { name: "Next.js", level: 90, icon: "🔥" },
-        { name: "TypeScript", level: 88, icon: "📘" },
-        { name: "Tailwind CSS", level: 92, icon: "🎨" },
-        { name: "Three.js", level: 85, icon: "🎮" },
-        { name: "Framer Motion", level: 87, icon: "✨" },
+        {
+          name: "React",
+          level: 95,
+          icon: "⚛️",
+          color: "from-blue-400 to-cyan-400",
+        },
+        {
+          name: "Next.js",
+          level: 90,
+          icon: "🔥",
+          color: "from-purple-400 to-blue-400",
+        },
+        {
+          name: "TypeScript",
+          level: 88,
+          icon: "📘",
+          color: "from-blue-500 to-indigo-500",
+        },
+        {
+          name: "Tailwind CSS",
+          level: 92,
+          icon: "🎨",
+          color: "from-cyan-400 to-teal-400",
+        },
+        {
+          name: "Three.js",
+          level: 85,
+          icon: "🎮",
+          color: "from-purple-500 to-pink-500",
+        },
+        {
+          name: "Framer Motion",
+          level: 87,
+          icon: "✨",
+          color: "from-indigo-400 to-purple-400",
+        },
       ],
     },
     backend: {
       title: "Backend Development",
       icon: Server,
-      color: "from-accent-secondary/20 to-accent/20",
+      color: "from-green-500/20 via-emerald-500/20 to-teal-500/20",
+      borderColor: "border-green-500/30",
+      accentColor: "text-green-400",
       skills: [
-        { name: "Node.js", level: 85, icon: "🟢" },
-        { name: "Express.js", level: 82, icon: "🚀" },
-        { name: "PostgreSQL", level: 80, icon: "🐘" },
-        { name: "MongoDB", level: 78, icon: "🍃" },
-        { name: "GraphQL", level: 75, icon: "📊" },
-        { name: "REST APIs", level: 88, icon: "🔌" },
+        {
+          name: "Node.js",
+          level: 85,
+          icon: "🟢",
+          color: "from-green-400 to-emerald-400",
+        },
+        {
+          name: "Express.js",
+          level: 82,
+          icon: "🚀",
+          color: "from-emerald-500 to-green-500",
+        },
+        {
+          name: "PostgreSQL",
+          level: 80,
+          icon: "🐘",
+          color: "from-blue-500 to-blue-600",
+        },
+        {
+          name: "MongoDB",
+          level: 78,
+          icon: "🍃",
+          color: "from-green-500 to-lime-500",
+        },
+        {
+          name: "GraphQL",
+          level: 75,
+          icon: "📊",
+          color: "from-pink-500 to-rose-500",
+        },
+        {
+          name: "REST APIs",
+          level: 88,
+          icon: "🔌",
+          color: "from-teal-400 to-cyan-400",
+        },
       ],
     },
     design: {
       title: "Design & Tools",
       icon: Palette,
-      color: "from-accent/20 to-accent-secondary/20",
+      color: "from-pink-500/20 via-rose-500/20 to-red-500/20",
+      borderColor: "border-pink-500/30",
+      accentColor: "text-pink-400",
       skills: [
-        { name: "Figma", level: 90, icon: "🎯" },
-        { name: "Adobe XD", level: 85, icon: "🔷" },
-        { name: "Photoshop", level: 80, icon: "🖼️" },
-        { name: "Blender", level: 75, icon: "🎭" },
-        { name: "UI/UX Design", level: 88, icon: "✨" },
-        { name: "Prototyping", level: 87, icon: "🔧" },
+        {
+          name: "Figma",
+          level: 90,
+          icon: "🎯",
+          color: "from-purple-400 to-pink-400",
+        },
+        {
+          name: "Adobe XD",
+          level: 85,
+          icon: "🔷",
+          color: "from-blue-500 to-purple-500",
+        },
+        {
+          name: "Photoshop",
+          level: 80,
+          icon: "🖼️",
+          color: "from-blue-600 to-indigo-600",
+        },
+        {
+          name: "Blender",
+          level: 75,
+          icon: "🎭",
+          color: "from-orange-500 to-yellow-500",
+        },
+        {
+          name: "UI/UX Design",
+          level: 88,
+          icon: "✨",
+          color: "from-pink-400 to-rose-400",
+        },
+        {
+          name: "Prototyping",
+          level: 87,
+          icon: "🔧",
+          color: "from-indigo-500 to-purple-500",
+        },
       ],
     },
     mobile: {
       title: "Mobile & Other",
       icon: Smartphone,
-      color: "from-accent-secondary/20 to-accent/20",
+      color: "from-orange-500/20 via-amber-500/20 to-yellow-500/20",
+      borderColor: "border-orange-500/30",
+      accentColor: "text-orange-400",
       skills: [
-        { name: "React Native", level: 80, icon: "📱" },
-        { name: "Flutter", level: 70, icon: "🦋" },
-        { name: "Git & GitHub", level: 92, icon: "🐙" },
-        { name: "Docker", level: 75, icon: "🐳" },
-        { name: "AWS", level: 72, icon: "☁️" },
-        { name: "Linux", level: 85, icon: "🐧" },
+        {
+          name: "React Native",
+          level: 80,
+          icon: "📱",
+          color: "from-blue-400 to-cyan-400",
+        },
+        {
+          name: "Flutter",
+          level: 70,
+          icon: "🦋",
+          color: "from-blue-500 to-blue-600",
+        },
+        {
+          name: "Git & GitHub",
+          level: 92,
+          icon: "🐙",
+          color: "from-gray-600 to-gray-700",
+        },
+        {
+          name: "Docker",
+          level: 75,
+          icon: "🐳",
+          color: "from-blue-500 to-cyan-500",
+        },
+        {
+          name: "AWS",
+          level: 72,
+          icon: "☁️",
+          color: "from-orange-400 to-yellow-400",
+        },
+        {
+          name: "Linux",
+          level: 85,
+          icon: "🐧",
+          color: "from-yellow-500 to-orange-500",
+        },
       ],
     },
   };
 
   const otherSkills = [
-    { name: "Machine Learning", icon: "🤖" },
-    { name: "Blockchain", icon: "⛓️" },
-    { name: "AR/VR", icon: "🥽" },
-    { name: "DevOps", icon: "🚀" },
-    { name: "Cybersecurity", icon: "🔐" },
-    { name: "Game Development", icon: "🎮" },
+    {
+      name: "Machine Learning",
+      icon: "🤖",
+      color: "from-violet-500 to-purple-500",
+    },
+    { name: "Blockchain", icon: "⛓️", color: "from-yellow-500 to-orange-500" },
+    { name: "AR/VR", icon: "🥽", color: "from-cyan-500 to-blue-500" },
+    { name: "DevOps", icon: "🚀", color: "from-green-500 to-teal-500" },
+    { name: "Cybersecurity", icon: "🔐", color: "from-red-500 to-rose-500" },
+    {
+      name: "Game Development",
+      icon: "🎮",
+      color: "from-purple-500 to-pink-500",
+    },
   ];
 
   useEffect(() => {
@@ -106,16 +242,19 @@ export default function SkillsSection() {
       className="py-20 relative overflow-hidden"
       style={{ zIndex: 25 }}
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-background-secondary/50 to-background/50" />
+      <div className="parallax-bg" />
 
       {/* Enhanced floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-20 right-20 w-40 h-40 bg-accent/8 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-20 left-20 w-48 h-48 bg-accent-secondary/8 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/3 left-1/3 w-28 h-28 bg-gradient-to-r from-accent/10 to-accent-secondary/10 rounded-full blur-xl" />
+        <div className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl" />
+        <div className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl" />
+        <div className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
+      <div
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative"
+        ref={ref}
+      >
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
@@ -128,18 +267,18 @@ export default function SkillsSection() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="flex items-center justify-center mb-6"
           >
-            <Zap className="w-6 h-6 text-white mr-3 animate-pulse" />
-            <span className="text-lg font-medium text-white">
+            <Sparkles className="w-6 h-6 text-blue-400 mr-3 animate-pulse" />
+            <span className="text-lg font-medium bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
               My technical expertise
             </span>
-            <Zap className="w-6 h-6 text-white ml-3 animate-pulse" />
+            <Sparkles className="w-6 h-6 text-purple-400 ml-3 animate-pulse" />
           </motion.div>
 
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent"
           >
             Skills & Expertise
           </motion.h2>
@@ -147,14 +286,14 @@ export default function SkillsSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-xl text-muted-foreground max-w-4xl mx-auto leading-relaxed"
+            className="text-xl text-gray-300 max-w-4xl mx-auto leading-relaxed"
           >
             Constantly learning and mastering{" "}
-            <span className="text-accent font-semibold">
+            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent font-semibold">
               cutting-edge technologies
             </span>{" "}
             to build{" "}
-            <span className="gradient-text-secondary font-semibold">
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-semibold">
               exceptional digital experiences
             </span>
             .
@@ -175,14 +314,27 @@ export default function SkillsSection() {
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               onClick={() => setActiveCategory(key)}
-              className={`px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 hover-lift ${
+              className={`px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 hover-lift relative group ${
                 activeCategory === key
-                  ? "bg-gradient-to-r from-accent/30 to-accent-secondary/30 text-accent border border-accent/50 shadow-lg"
-                  : "bg-background/50 text-muted-foreground hover:text-accent hover:bg-accent/10 border border-accent/20"
+                  ? `bg-gradient-to-r ${category.color} ${category.borderColor} border backdrop-blur-sm shadow-lg shadow-current/20`
+                  : `bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-600/30 hover:border-gray-500/50`
               }`}
             >
-              <category.icon className="w-5 h-5" />
-              <span>{category.title}</span>
+              <category.icon
+                className={`w-5 h-5 ${
+                  activeCategory === key
+                    ? category.accentColor
+                    : "text-gray-400"
+                }`}
+              />
+              <span
+                className={activeCategory === key ? category.accentColor : ""}
+              >
+                {category.title}
+              </span>
+              {activeCategory === key && (
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl" />
+              )}
             </motion.button>
           ))}
         </motion.div>
@@ -192,37 +344,45 @@ export default function SkillsSection() {
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="glow-border rounded-3xl p-10 mb-16 bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+          className={`relative rounded-3xl p-10 mb-16 bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-sm border ${skillCategories[activeCategory].borderColor} shadow-2xl shadow-current/10`}
           ref={skillsRef}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {skillCategories[activeCategory].skills.map((skill, index) => (
-              <motion.div
-                key={skill.name}
-                initial={{ opacity: 0, x: -30 }}
-                animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                className="space-y-4"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{skill.icon}</span>
-                    <h4 className="text-lg font-semibold text-foreground">
-                      {skill.name}
-                    </h4>
+          <div
+            className={`absolute inset-0 bg-gradient-to-br ${skillCategories[activeCategory].color} rounded-3xl opacity-30`}
+          />
+          <div className="relative z-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {skillCategories[activeCategory].skills.map((skill, index) => (
+                <motion.div
+                  key={skill.name}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={isVisible ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
+                  className="space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{skill.icon}</span>
+                      <h4 className="text-lg font-semibold text-white">
+                        {skill.name}
+                      </h4>
+                    </div>
+                    <span
+                      className={`font-bold text-lg ${skillCategories[activeCategory].accentColor}`}
+                    >
+                      {skill.level}%
+                    </span>
                   </div>
-                  <span className="text-accent font-bold text-lg">
-                    {skill.level}%
-                  </span>
-                </div>
-                <div className="skill-bar skills-bar relative">
-                  <div
-                    className="skills-fill absolute top-0 left-0 h-full bg-gradient-to-r from-accent to-accent-secondary rounded-xl transform origin-left scale-x-0 transition-transform duration-1000 ease-out"
-                    style={{ width: "100%" }}
-                  />
-                </div>
-              </motion.div>
-            ))}
+                  <div className="skill-bar skills-bar relative bg-gray-700/50 rounded-xl h-3 overflow-hidden">
+                    <div
+                      className={`skills-fill absolute top-0 left-0 h-full bg-gradient-to-r ${skill.color} rounded-xl transform origin-left scale-x-0 transition-transform duration-1000 ease-out shadow-lg`}
+                      style={{ width: "100%" }}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-xl" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </motion.div>
 
@@ -232,7 +392,7 @@ export default function SkillsSection() {
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-          <h3 className="text-3xl font-bold font-space text-center mb-12 gradient-text-secondary">
+          <h3 className="text-3xl font-bold font-space text-center mb-12 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
             Currently Exploring
           </h3>
 
@@ -243,13 +403,18 @@ export default function SkillsSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isVisible ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                className="glass-effect rounded-full px-8 py-4 hover-lift bg-gradient-to-r from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
+                className="group relative hover-lift"
               >
-                <div className="flex items-center space-x-3">
-                  <span className="text-2xl">{skill.icon}</span>
-                  <span className="text-base font-medium text-foreground">
-                    {skill.name}
-                  </span>
+                <div
+                  className={`absolute inset-0 bg-gradient-to-r ${skill.color} rounded-full opacity-20 group-hover:opacity-30 transition-opacity blur-xl`}
+                />
+                <div className="relative bg-gray-800/60 backdrop-blur-sm rounded-full px-8 py-4 border border-gray-600/30 group-hover:border-gray-500/50 transition-all">
+                  <div className="flex items-center space-x-3">
+                    <span className="text-2xl">{skill.icon}</span>
+                    <span className="text-base font-medium text-gray-200 group-hover:text-white transition-colors">
+                      {skill.name}
+                    </span>
+                  </div>
                 </div>
               </motion.div>
             ))}

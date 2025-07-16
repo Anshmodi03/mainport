@@ -898,7 +898,68 @@ body::before {
 
 /* Performance optimizations */
 * {
-  will-change: auto;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+  backface-visibility: hidden;
+}
+
+/* Force hardware acceleration for animations */
+.animate-pulse,
+.animate-spin,
+.animate-bounce {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Optimize transforms */
+[class*="transform"],
+[class*="translate"],
+[class*="rotate"],
+[class*="scale"] {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Reduce animations on low-end devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--background-secondary));
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--accent) / 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--accent) / 0.7);
+}
+
+/* Performance variables */
+:root {
+  --animation-duration: 0.3s;
+  --transition-duration: 0.2s;
 }
 
 .performance-optimized {

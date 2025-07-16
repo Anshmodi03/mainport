@@ -38,15 +38,6 @@ function App() {
   const { initializeScrollAnimations } = useGSAPScroll();
 
   useEffect(() => {
-    // Simulate initial app loading
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
-  useEffect(() => {
     if (!isLoading) {
       // Initialize GSAP scroll animations after loading
       const cleanup = initializeScrollAnimations();

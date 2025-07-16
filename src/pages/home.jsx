@@ -7,6 +7,7 @@ import ProjectsSection from "../components/projects-section.jsx";
 import SkillsSection from "../components/skills-section.jsx";
 import ContactSection from "../components/contact-section.jsx";
 import ThreeDScene from "../components/three-d-scene.jsx";
+import PerformanceMonitor from "../components/performance-monitor.jsx";
 import { useScrollEffects } from "../hooks/use-scroll-effects.jsx";
 
 const Home = memo(() => {
@@ -14,6 +15,7 @@ const Home = memo(() => {
 
   return (
     <div className="relative min-h-screen bg-background text-foreground">
+      <PerformanceMonitor />
       <ThreeDScene />
       <Navigation />
       <main>
