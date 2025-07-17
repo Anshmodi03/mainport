@@ -35,21 +35,25 @@ function AppRouter() {
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const { initializeScrollAnimations } = useGSAPScroll();
 
   useEffect(() => {
-    if (!isLoading) {
+    if (!isLoading && !hasLoaded) {
+      setHasLoaded(true);
       // Initialize GSAP scroll animations after loading
       const cleanup = initializeScrollAnimations();
       return cleanup;
     }
-  }, [isLoading, initializeScrollAnimations]);
+  }, [isLoading, hasLoaded, initializeScrollAnimations]);
 
   const handleLoadingComplete = () => {
-    setIsLoading(false);
+    if (!hasLoaded) {
+      setIsLoading(false);
+    }
   };
 
-  if (isLoading) {
+  if (isLoading && !hasLoaded) {
     return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
   }
 
