@@ -256,13 +256,28 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" className="py-20 relative overflow-hidden">
-      <div className="parallax-bg" />
+      <div
+        className="parallax-bg absolute inset-0 bg-gradient-to-br from-background/50 via-background-secondary/30 to-background/50"
+        data-speed="0.2"
+      />
 
-      {/* Enhanced floating elements */}
+      {/* Enhanced floating elements with parallax */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl" />
+        <div
+          className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl parallax-element"
+          data-speed="0.3"
+          data-intensity="40"
+        />
+        <div
+          className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl parallax-element"
+          data-speed="0.4"
+          data-intensity="50"
+        />
+        <div
+          className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full parallax-element"
+          data-speed="0.25"
+          data-intensity="30 blur-xl"
+        />
       </div>
 
       <div

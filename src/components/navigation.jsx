@@ -10,6 +10,7 @@ import {
   Briefcase,
   Award,
   Sparkles,
+  ChevronDown,
 } from "lucide-react";
 import { usePerformanceOptimization } from "../hooks/use-performance.jsx";
 import { useIsMobile } from "../hooks/use-mobile.jsx";
@@ -18,39 +19,83 @@ const Navigation = memo(() => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const { throttle } = usePerformanceOptimization();
   const isMobile = useIsMobile();
 
   const navItems = [
-    { id: "home", label: "Home", icon: Home },
-    { id: "about", label: "About", icon: User },
-    { id: "experience", label: "Experience", icon: Briefcase },
-    { id: "projects", label: "Projects", icon: Code },
-    { id: "skills", label: "Skills", icon: Award },
-    { id: "contact", label: "Contact", icon: Mail },
+    {
+      id: "home",
+      label: "Home",
+      icon: Home,
+      color: "from-blue-500 to-cyan-500",
+    },
+    {
+      id: "about",
+      label: "About",
+      icon: User,
+      color: "from-purple-500 to-pink-500",
+    },
+    {
+      id: "experience",
+      label: "Experience",
+      icon: Briefcase,
+      color: "from-orange-500 to-red-500",
+    },
+    {
+      id: "projects",
+      label: "Projects",
+      icon: Code,
+      color: "from-green-500 to-emerald-500",
+    },
+    {
+      id: "skills",
+      label: "Skills",
+      icon: Award,
+      color: "from-yellow-500 to-orange-500",
+    },
+    {
+      id: "contact",
+      label: "Contact",
+      icon: Mail,
+      color: "from-indigo-500 to-purple-500",
+    },
   ];
 
   const handleScroll = useCallback(
     throttle(() => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 50);
+      const currentScrollY = window.scrollY;
 
-      // Update active section based on scroll position
+      // Keep navigation always visible
+      setIsVisible(true);
+
+      setLastScrollY(currentScrollY);
+      setIsScrolled(currentScrollY > 50);
+
+      // Update active section with improved detection
       const sections = navItems.map((item) => item.id);
-      const currentSection = sections.find((section) => {
+      let currentSection = null;
+      let minDistance = Infinity;
+
+      sections.forEach((section) => {
         const element = document.getElementById(section);
         if (element) {
           const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
+          const distance = Math.abs(rect.top - 100);
+
+          if (rect.top <= 200 && rect.bottom >= 0 && distance < minDistance) {
+            minDistance = distance;
+            currentSection = section;
+          }
         }
-        return false;
       });
 
-      if (currentSection) {
+      if (currentSection && currentSection !== activeSection) {
         setActiveSection(currentSection);
       }
     }, 16),
-    [throttle, navItems]
+    [throttle, navItems, lastScrollY]
   );
 
   useEffect(() => {
@@ -59,146 +104,448 @@ const Navigation = memo(() => {
   }, [handleScroll]);
 
   const scrollToSection = useCallback((sectionId) => {
-    // Close mobile menu first
     setIsMobileMenuOpen(false);
 
-    // Small delay to allow menu to close
-    setTimeout(() => {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        const headerHeight = 80;
-        const elementPosition = element.offsetTop;
-        const offsetPosition = elementPosition - headerHeight;
+    // Immediately update active section for better responsiveness
+    setActiveSection(sectionId);
 
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const headerHeight = 80;
+      const elementPosition = element.offsetTop;
+      const offsetPosition = elementPosition - headerHeight;
+
+      // Use requestAnimationFrame for smoother animation
+      requestAnimationFrame(() => {
         window.scrollTo({
           top: offsetPosition,
           behavior: "smooth",
         });
-
-        // Update active section
-        setActiveSection(sectionId);
-      }
-    }, 100);
+      });
+    }
   }, []);
 
+  // Close mobile menu on escape key
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isMobileMenuOpen]);
+
+  const logoVariants = {
+    hidden: { opacity: 0, scale: 0.5, rotate: -180 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+        duration: 0.8,
+      },
+    },
+  };
+
+  const navVariants = {
+    hidden: { y: -100, opacity: 0 },
+    visible: {
+      y: isVisible ? 0 : -100,
+      opacity: isVisible ? 1 : 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  };
+
+  const mobileMenuVariants = {
+    hidden: {
+      opacity: 0,
+      scale: 0.95,
+      y: -20,
+    },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        staggerChildren: 0.1,
+        delayChildren: 0.1,
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.95,
+      y: -20,
+      transition: {
+        duration: 0.2,
+      },
+    },
+  };
+
+  const mobileItemVariants = {
+    hidden: { opacity: 0, x: -30 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      },
+    },
+  };
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled ? "nav-blur border-b border-accent/20" : "bg-transparent"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Enhanced Logo */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="flex items-center cursor-pointer group"
-            onClick={() => scrollToSection("home")}
-          >
-            <div className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 group-hover:scale-110 transition-transform duration-300 shadow-lg overflow-hidden">
-              {/* Replace with your image path - currently using logo.jpg from root */}
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="w-full h-full object-cover rounded-2xl"
-                onError={(e) => {
-                  // Fallback to text if image fails to load
-                  e.target.style.display = "none";
-                  e.target.nextSibling.style.display = "block";
-                }}
-              />
-            </div>
-            <div className="flex items-center">
-              <span className="text-2xl font-bold font-space gradient-text">
-                Ansh Modi
-              </span>
-              <Sparkles className="w-5 h-5 text-accent ml-2 animate-pulse" />
-            </div>
-          </motion.div>
-
-          {/* Enhanced Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-2">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={item.id}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                onClick={() => scrollToSection(item.id)}
-                className={`relative px-6 py-3 text-sm font-medium transition-all duration-300 group rounded-2xl ${
-                  activeSection === item.id
-                    ? "text-accent bg-accent/10 border border-accent/30"
-                    : "text-muted-foreground hover:text-accent hover:bg-accent/5"
-                }`}
-              >
-                <span className="relative z-10 flex items-center space-x-2">
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.label}</span>
-                </span>
-                {activeSection === item.id && (
-                  <motion.div
-                    layoutId="activeSection"
-                    className="absolute inset-0 bg-gradient-to-r from-accent/20 to-accent-secondary/20 rounded-2xl border border-accent/30"
-                    initial={false}
-                    transition={{ duration: 0.3 }}
+    <>
+      <motion.nav
+        variants={navVariants}
+        initial="hidden"
+        animate="visible"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          isScrolled
+            ? "backdrop-blur-2xl bg-background/80 border-b border-white/10 shadow-2xl"
+            : "bg-transparent"
+        }`}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-20">
+            {/* Enhanced Logo with Animation */}
+            <motion.div
+              variants={logoVariants}
+              initial="hidden"
+              animate="visible"
+              className="flex items-center cursor-pointer group z-50"
+              onClick={() => scrollToSection("home")}
+            >
+              <div className="relative">
+                <div className="w-12 h-12 rounded-2xl flex items-center justify-center mr-4 shadow-2xl overflow-hidden relative">
+                  <div className="absolute inset-0 "></div>
+                  <img
+                    src="/logo.png"
+                    alt="Ansh Modi"
+                    className="w-full h-full object-cover rounded-2xl relative z-10"
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                      e.target.nextSibling.style.display = "flex";
+                    }}
                   />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/10 to-accent-secondary/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              </motion.button>
-            ))}
+                  <div
+                    className="w-full h-full hidden items-center justify-center text-white font-bold text-lg bg-gradient-to-br from-cyan-400 to-purple-600"
+                    style={{ display: "none" }}
+                  >
+                    AM
+                  </div>
+                </div>
+
+                {/* Floating particles around logo */}
+                <div className="absolute -top-1 -right-1">
+                  <motion.div
+                    animate={{
+                      rotate: 360,
+                      scale: [1, 1.2, 1],
+                    }}
+                    transition={{
+                      rotate: {
+                        duration: 10,
+                        repeat: Infinity,
+                        ease: "linear",
+                      },
+                      scale: { duration: 2, repeat: Infinity },
+                    }}
+                  >
+                    <Sparkles className="w-4 h-4 text-cyan-400" />
+                  </motion.div>
+                </div>
+              </div>
+
+              <div className="flex items-center">
+                <span className="text-2xl font-bold font-space bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                  Ansh Modi
+                </span>
+                <motion.div
+                  animate={{
+                    y: [0, -5, 0],
+                    rotate: [0, 10, -10, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "reverse",
+                  }}
+                  className="ml-2"
+                >
+                  <Sparkles className="w-5 h-5 text-cyan-400" />
+                </motion.div>
+              </div>
+            </motion.div>
+
+            {/* Desktop Navigation with Enhanced Design */}
+            <div className="hidden md:flex items-center space-x-1">
+              {navItems.map((item, index) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <motion.button
+                    key={item.id}
+                    variants={itemVariants}
+                    initial="hidden"
+                    animate="visible"
+                    transition={{ delay: 0.1 * index }}
+                    onClick={() => scrollToSection(item.id)}
+                    className={`relative px-6 py-3 text-sm font-medium group rounded-2xl overflow-hidden ${
+                      isActive
+                        ? "text-white shadow-2xl"
+                        : "text-gray-300 hover:text-white"
+                    }`}
+                    whileHover={{ scale: 1.05, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    {/* Background gradient with smooth animation */}
+                    <motion.div
+                      className={`absolute inset-0 bg-gradient-to-r ${item.color} rounded-2xl`}
+                      initial={false}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        scale: isActive ? 1 : 0.9,
+                      }}
+                      whileHover={{ opacity: 0.8 }}
+                      transition={{
+                        duration: 0.2,
+                        ease: "easeOut",
+                      }}
+                    />
+
+                    {/* Glass effect */}
+                    <motion.div
+                      className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-2xl"
+                      initial={false}
+                      animate={{ opacity: isActive ? 1 : 0 }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+
+                    {/* Border glow */}
+                    <motion.div
+                      className="absolute inset-0 rounded-2xl border border-white/20"
+                      initial={false}
+                      animate={{
+                        opacity: isActive ? 1 : 0,
+                        boxShadow: isActive
+                          ? "0 0 20px rgba(255, 255, 255, 0.3)"
+                          : "0 0 0px rgba(255, 255, 255, 0)",
+                      }}
+                      whileHover={{ opacity: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+
+                    <span className="relative z-10 flex items-center space-x-2">
+                      <motion.div
+                        animate={{ rotate: isActive ? 360 : 0 }}
+                        transition={{
+                          duration: 0.6,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <item.icon className="w-4 h-4" />
+                      </motion.div>
+                      <span>{item.label}</span>
+                    </span>
+
+                    {/* Active indicator with smooth animation */}
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          className="absolute bottom-1 left-1/2 w-2 h-2 bg-white rounded-full"
+                          style={{ x: "-50%" }}
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          exit={{ scale: 0, opacity: 0 }}
+                          transition={{
+                            duration: 0.2,
+                            ease: "easeOut",
+                          }}
+                        />
+                      )}
+                    </AnimatePresence>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            {/* Enhanced Mobile Menu Button */}
+            <motion.button
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.3 }}
+              className="md:hidden p-3 text-gray-300 hover:text-white transition-colors duration-300 z-50 relative rounded-2xl hover:bg-white/10 border border-white/20 backdrop-blur-sm"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <motion.div
+                animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </motion.div>
+            </motion.button>
           </div>
-
-          {/* Enhanced Mobile Menu Button */}
-          <motion.button
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="md:hidden p-3 text-muted-foreground hover:text-accent transition-colors duration-300 z-50 relative rounded-2xl hover:bg-accent/10 border border-accent/20"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
         </div>
-      </div>
+      </motion.nav>
 
-      {/* Enhanced Mobile Navigation */}
+      {/* Enhanced Mobile Navigation Overlay */}
       <AnimatePresence>
         {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            className="md:hidden bg-background/95 backdrop-blur-lg border-t border-accent/20 fixed top-20 left-0 right-0 z-40 shadow-2xl"
-          >
-            <div className="px-6 py-8 space-y-2">
-              {navItems.map((item, index) => (
-                <motion.button
-                  key={item.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 * index }}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`flex items-center space-x-4 w-full px-6 py-5 text-left rounded-2xl transition-all duration-300 touch-manipulation min-h-[56px] ${
-                    activeSection === item.id
-                      ? "bg-gradient-to-r from-accent/20 to-accent-secondary/20 text-accent border border-accent/30"
-                      : "text-muted-foreground hover:bg-accent/10 hover:text-accent active:bg-accent/30"
-                  }`}
-                >
-                  <item.icon size={22} />
-                  <span className="font-medium text-lg">{item.label}</span>
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              variants={mobileMenuVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed top-20 left-4 right-4 z-50 md:hidden"
+            >
+              <div className="bg-background/95 backdrop-blur-2xl border border-white/20 rounded-3xl shadow-2xl overflow-hidden">
+                {/* Menu Header */}
+                <div className="px-6 py-4 border-b border-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+                      Navigation
+                    </span>
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Menu Items */}
+                <div className="px-4 py-6 space-y-2">
+                  {navItems.map((item, index) => {
+                    const isActive = activeSection === item.id;
+                    return (
+                      <motion.button
+                        key={item.id}
+                        variants={mobileItemVariants}
+                        onClick={() => scrollToSection(item.id)}
+                        className={`flex items-center space-x-4 w-full px-6 py-4 text-left rounded-2xl ${
+                          isActive
+                            ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-white border border-cyan-400/30"
+                            : "text-gray-300 hover:bg-white/10 hover:text-white active:bg-white/20"
+                        }`}
+                        whileHover={{ scale: 1.02, x: 5 }}
+                        whileTap={{ scale: 0.98 }}
+                        animate={{
+                          backgroundColor: isActive
+                            ? "rgba(6, 182, 212, 0.1)"
+                            : "transparent",
+                        }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <motion.div
+                          className={`p-2 rounded-xl bg-gradient-to-r ${item.color}`}
+                          animate={{
+                            rotate: isActive ? 360 : 0,
+                            scale: isActive ? 1.1 : 1,
+                          }}
+                          transition={{
+                            duration: 0.6,
+                            ease: "easeInOut",
+                          }}
+                        >
+                          <item.icon size={20} className="text-white" />
+                        </motion.div>
+                        <div className="flex-1">
+                          <span className="font-medium text-lg">
+                            {item.label}
+                          </span>
+                          <AnimatePresence>
+                            {isActive && (
+                              <motion.div
+                                initial={{ width: 0, opacity: 0 }}
+                                animate={{ width: "100%", opacity: 1 }}
+                                exit={{ width: 0, opacity: 0 }}
+                                transition={{
+                                  duration: 0.4,
+                                  ease: "easeInOut",
+                                }}
+                                className="h-0.5 bg-gradient-to-r from-cyan-400 to-purple-600 mt-1 rounded-full"
+                              />
+                            )}
+                          </AnimatePresence>
+                        </div>
+                        <AnimatePresence>
+                          {isActive && (
+                            <motion.div
+                              initial={{ scale: 0, opacity: 0 }}
+                              animate={{ scale: 1, opacity: 1 }}
+                              exit={{ scale: 0, opacity: 0 }}
+                              transition={{
+                                duration: 0.3,
+                                ease: "easeInOut",
+                              }}
+                              className="w-2 h-2 bg-cyan-400 rounded-full"
+                            />
+                          )}
+                        </AnimatePresence>
+                      </motion.button>
+                    );
+                  })}
+                </div>
+
+                {/* Menu Footer */}
+                <div className="px-6 py-4 border-t border-white/10 bg-white/5">
+                  <p className="text-sm text-gray-400 text-center">
+                    Swipe up to close or tap outside
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </>
   );
 });
 

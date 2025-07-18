@@ -1072,3 +1072,73 @@ body {
     transform: scale(1) translateZ(0);
   }
 }
+
+/* Animations */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes float-slow {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+@keyframes float-fast {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-25px);
+  }
+}
+
+.floating-element {
+  animation: float 6s ease-in-out infinite;
+}
+
+.floating-element-slow {
+  animation: float-slow 8s ease-in-out infinite;
+}
+
+.floating-element-fast {
+  animation: float-fast 4s ease-in-out infinite;
+}
+
+/* Parallax optimizations */
+.parallax-element,
+.parallax-bg,
+.parallax-content {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Performance optimizations for parallax */
+.parallax-bg {
+  transform: translate3d(0, 0, 0);
+}
+
+.parallax-element {
+  transform: translate3d(0, 0, 0);
+}
+
+.parallax-content {
+  transform: translate3d(0, 0, 0);
+}

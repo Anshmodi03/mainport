@@ -143,12 +143,21 @@ export default function HeroSection() {
       className="min-h-screen flex items-center justify-center relative overflow-hidden px-4 sm:px-6 lg:px-8"
       style={{ zIndex: 10 }}
     >
-      {/* Enhanced background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary to-background opacity-95" />
+      {/* Enhanced background gradient with parallax */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-background via-background-secondary to-background opacity-95 parallax-bg"
+        data-speed="0.1"
+      />
 
-      {/* Additional atmospheric layers */}
-      <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent-secondary/5" />
-      <div className="absolute inset-0 bg-radial-gradient from-accent/10 via-transparent to-transparent" />
+      {/* Additional atmospheric layers with parallax */}
+      <div
+        className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-accent-secondary/5 parallax-bg"
+        data-speed="0.2"
+      />
+      <div
+        className="absolute inset-0 bg-radial-gradient from-accent/10 via-transparent to-transparent parallax-bg"
+        data-speed="0.15"
+      />
 
       {/* Animated background elements - Hidden on mobile for better performance */}
       <div className="absolute inset-0 overflow-hidden hidden lg:block">
@@ -169,7 +178,7 @@ export default function HeroSection() {
           }}
         />
 
-        {/* Enhanced floating elements with GSAP */}
+        {/* Enhanced floating elements with GSAP and parallax */}
         {[...Array(12)].map((_, i) => (
           <div
             key={i}
@@ -182,7 +191,9 @@ export default function HeroSection() {
                 : i % 3 === 1
                 ? "from-accent-secondary/25 to-accent/15"
                 : "from-accent/20 to-accent-secondary/30"
-            } rounded-full blur-xl`}
+            } rounded-full blur-xl parallax-element`}
+            data-speed={0.3 + (i % 3) * 0.1}
+            data-intensity={30 + (i % 3) * 10}
             style={{
               left: `${10 + (i % 4) * 20}%`,
               top: `${10 + (i % 3) * 25}%`,
@@ -190,12 +201,23 @@ export default function HeroSection() {
           />
         ))}
 
-        {/* Additional decorative elements */}
-        <div className="floating-element absolute top-20 left-20 w-16 h-16 bg-gradient-to-r from-accent/30 to-accent-secondary/30 rounded-full blur-lg" />
-        <div className="floating-element-slow absolute bottom-20 right-20 w-12 h-12 bg-gradient-to-r from-accent-secondary/40 to-accent/40 rounded-full blur-md" />
+        {/* Additional decorative elements with parallax */}
+        <div
+          className="floating-element absolute top-20 left-20 w-16 h-16 bg-gradient-to-r from-accent/30 to-accent-secondary/30 rounded-full blur-lg parallax-element"
+          data-speed="0.4"
+          data-intensity="25"
+        />
+        <div
+          className="floating-element-slow absolute bottom-20 right-20 w-12 h-12 bg-gradient-to-r from-accent-secondary/40 to-accent/40 rounded-full blur-md parallax-element"
+          data-speed="0.6"
+          data-intensity="35"
+        />
       </div>
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto text-center hero-content">
+      <div
+        className="relative z-10 w-full max-w-7xl mx-auto text-center hero-content parallax-content"
+        data-speed="0.1"
+      >
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
@@ -472,7 +494,7 @@ export default function HeroSection() {
               >
                 {social.isResumeButton ? (
                   <div
-                    className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
+                    className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
                   >
                     <social.icon className="w-7 h-7 sm:w-8 sm:h-8 text-background transition-all duration-300 group-hover:scale-110" />
                   </div>
@@ -490,7 +512,7 @@ export default function HeroSection() {
                     className="block"
                   >
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
+                      className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br ${social.color} group-hover:bg-gradient-to-br group-hover:${social.hoverColor} rounded-xl sm:rounded-2xl flex items-center justify-center backdrop-blur-sm transition-all duration-500 shadow-lg shadow-accent/20 group-hover:shadow-2xl group-hover:shadow-accent/40 border border-white/10 group-hover:border-accent/30`}
                     >
                       <social.icon className="w-7 h-7 sm:w-8 sm:h-8 text-background transition-all duration-300 group-hover:scale-110" />
                     </div>
@@ -608,7 +630,7 @@ export default function HeroSection() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 1.7 }}
-          className="absolute bottom-16 left-2 sm:left-4 font-jetbrains text-muted-foreground/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent-secondary/20 max-w-[140px] sm:max-w-xs"
+          className="absolute bottom-16 left-2 sm:left-4 font-jetbrains text-muted-foreground/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent-secondary/20 max-w-[180px] sm:max-w-xs"
         >
           <div className="space-y-1">
             <div className="text-muted-foreground text-xs">

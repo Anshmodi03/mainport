@@ -34,36 +34,69 @@ export const useGSAPScroll = () => {
         "-=0.5"
       );
 
-    // Advanced parallax scrolling
+    // Enhanced lightweight parallax scrolling
     gsap.utils.toArray(".parallax-element").forEach((element, i) => {
-      const speed = element.dataset.speed || 0.5;
+      const speed = parseFloat(element.dataset.speed) || 0.5;
       const direction = element.dataset.direction || "vertical";
+      const intensity = parseFloat(element.dataset.intensity) || 50;
 
       if (direction === "vertical") {
         gsap.to(element, {
-          yPercent: -50 * speed,
+          yPercent: -intensity * speed,
           ease: "none",
           scrollTrigger: {
             trigger: element,
             start: "top bottom",
             end: "bottom top",
-            scrub: true,
+            scrub: 1,
             invalidateOnRefresh: true,
           },
         });
-      } else {
+      } else if (direction === "horizontal") {
         gsap.to(element, {
-          xPercent: -25 * speed,
+          xPercent: -intensity * speed * 0.5,
           ease: "none",
           scrollTrigger: {
             trigger: element,
             start: "top bottom",
             end: "bottom top",
-            scrub: true,
+            scrub: 1,
             invalidateOnRefresh: true,
           },
         });
       }
+    });
+
+    // Lightweight background parallax layers
+    gsap.utils.toArray(".parallax-bg").forEach((bg, i) => {
+      const speed = parseFloat(bg.dataset.speed) || 0.3;
+      gsap.to(bg, {
+        yPercent: -30 * speed,
+        ease: "none",
+        scrollTrigger: {
+          trigger: bg,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 2,
+          invalidateOnRefresh: true,
+        },
+      });
+    });
+
+    // Subtle content parallax
+    gsap.utils.toArray(".parallax-content").forEach((content, i) => {
+      const speed = parseFloat(content.dataset.speed) || 0.2;
+      gsap.to(content, {
+        yPercent: -20 * speed,
+        ease: "none",
+        scrollTrigger: {
+          trigger: content,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: 1.5,
+          invalidateOnRefresh: true,
+        },
+      });
     });
 
     // Complex section reveals with morphing effects
