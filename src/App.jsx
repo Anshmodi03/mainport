@@ -21,7 +21,16 @@ const queryClient = new QueryClient({
 function AppRouter() {
   return (
     <Router>
-      <Suspense fallback={<LoadingScreen />}>
+      <Suspense
+        fallback={
+          <div className="min-h-screen flex items-center justify-center bg-background">
+            <div className="text-center">
+              <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+              <p className="text-muted-foreground">Loading page...</p>
+            </div>
+          </div>
+        }
+      >
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
@@ -35,25 +44,29 @@ function AppRouter() {
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
-  const [hasLoaded, setHasLoaded] = useState(false);
   const { initializeScrollAnimations } = useGSAPScroll();
 
   useEffect(() => {
-    if (!isLoading && !hasLoaded) {
-      setHasLoaded(true);
+    if (!isLoading) {
       // Initialize GSAP scroll animations after loading
       const cleanup = initializeScrollAnimations();
       return cleanup;
     }
-  }, [isLoading, hasLoaded, initializeScrollAnimations]);
+  }, [isLoading, initializeScrollAnimations]);
 
   const handleLoadingComplete = () => {
-    if (!hasLoaded) {
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
-  if (isLoading && !hasLoaded) {
+  useEffect(() => {
+    // Faster loading timer
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
     return <LoadingScreen onLoadingComplete={handleLoadingComplete} />;
   }
 

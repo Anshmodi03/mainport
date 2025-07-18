@@ -1,30 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 
 export function useScrollEffects() {
-  const [scrollY, setScrollY] = useState(0);
-  const [scrollDirection, setScrollDirection] = useState("down");
-  const lastScrollY = useRef(0);
-
   useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setScrollY(currentScrollY);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "50px" }
+    );
 
-      if (currentScrollY > lastScrollY.current) {
-        setScrollDirection("down");
-      } else if (currentScrollY < lastScrollY.current) {
-        setScrollDirection("up");
-      }
+    const elements = document.querySelectorAll("section");
+    elements.forEach((el) => {
+      el.style.opacity = "0";
+      el.style.transform = "translateY(20px)";
+      el.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+      observer.observe(el);
+    });
 
-      lastScrollY.current = currentScrollY;
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => observer.disconnect();
   }, []);
-
-  return { scrollY, scrollDirection };
 }
