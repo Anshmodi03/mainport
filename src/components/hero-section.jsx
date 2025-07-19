@@ -218,18 +218,32 @@ export default function HeroSection() {
         className="relative z-10 w-full max-w-7xl mx-auto text-center hero-content parallax-content"
         data-speed="0.1"
       >
+        {/* Mobile welcome text - moved to the very top */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="flex items-center justify-center mb-8 mt-4 md:hidden"
+        >
+          <Sparkles className="w-4 h-4 text-white mr-2 animate-pulse" />
+          <span className="text-sm font-medium text-white">
+            Welcome to my digital universe
+          </span>
+          <Sparkles className="w-4 h-4 text-white ml-2 animate-pulse" />
+        </motion.div>
+
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           className="space-y-6 sm:space-y-8"
         >
-          {/* Welcome text positioned on left */}
+          {/* Desktop welcome text positioned on left */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="absolute left-4 sm:left-8 md:left-12 lg:left-16  transform -translate-y-1/2 hidden md:flex flex-col items-start"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="absolute left-4 sm:left-8 md:left-12 lg:left-16 transform -translate-y-1/2 hidden md:flex flex-col items-start"
           >
             <div className="flex items-center mb-4 mt-8">
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white mr-2 animate-pulse" />
@@ -238,20 +252,6 @@ export default function HeroSection() {
               </span>
               <Sparkles className="w-5 h-5 sm:w-6 sm:h-6 text-white ml-2 animate-pulse" />
             </div>
-          </motion.div>
-
-          {/* Mobile welcome text */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="flex items-center justify-center mb-4 md:hidden"
-          >
-            <Sparkles className="w-4 h-4 text-white mr-2 animate-pulse" />
-            <span className="text-sm font-medium text-white">
-              Welcome to my digital universe
-            </span>
-            <Sparkles className="w-4 h-4 text-white ml-2 animate-pulse" />
           </motion.div>
 
           {/* Main heading */}
@@ -273,7 +273,7 @@ export default function HeroSection() {
                 Hi, I'm
               </motion.span>
               <motion.div
-                className="relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl"
+                className="relative text-2xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl flex items-center justify-center"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -528,15 +528,40 @@ export default function HeroSection() {
               </motion.div>
             ))}
           </motion.div>
+
+          {/* Scroll indicator for mobile - positioned below social links */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 1.8 }}
+            className="flex md:hidden justify-center mt-8 px-4"
+          >
+            <motion.div
+              whileHover={{ scale: 1.15, rotate: 5 }}
+              whileTap={{ scale: 0.9 }}
+              className="group cursor-pointer"
+              onClick={() => scrollToSection("about")}
+            >
+              <div className="relative">
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{ duration: 2, repeat: Infinity }}
+                  className="w-10 h-10 bg-gradient-to-r from-accent/30 to-accent-secondary/30 backdrop-blur-sm rounded-xl flex items-center justify-center text-foreground group-hover:from-accent/50 group-hover:to-accent-secondary/50 transition-all duration-300 border border-accent/30"
+                >
+                  <MoveDown className="w-5 h-5" />
+                </motion.div>
+              </div>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
 
-      {/* Enhanced Scroll indicator - Bottom Right */}
+      {/* Enhanced Scroll indicator - Bottom Right (Desktop only) */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 1.2 }}
-        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 pointer-events-auto"
+        className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-20 pointer-events-auto hidden md:block"
         onClick={() => scrollToSection("about")}
       >
         <motion.div
@@ -604,12 +629,12 @@ export default function HeroSection() {
 
       {/* Enhanced Decorative elements - Mobile view (below xl) */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none block xl:hidden">
-        {/* Code-like decorative elements - Top right for mobile */}
+        {/* Code-like decorative elements - positioned to the right of Ansh Modi for mobile */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 1.5 }}
-          className="absolute top-16 right-2 sm:right-4 font-jetbrains text-accent/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent/20 max-w-[140px] sm:max-w-xs"
+          transition={{ duration: 0.8, delay: 1.9 }}
+          className="absolute top-40 right-4 transform -translate-y-1/2 font-jetbrains text-accent/60 text-xs backdrop-blur-sm bg-background/30 p-2 rounded-lg border border-accent/20 max-w-[120px]"
         >
           <div className="space-y-1">
             <div className="text-accent-secondary text-xs">
@@ -619,26 +644,9 @@ export default function HeroSection() {
               name: <span className="text-accent">'Ansh'</span>,
             </div>
             <div className="ml-1 text-foreground text-xs">
-              skills: <span className="text-accent">['React, Node.js']</span>,
+              passion: <span className="text-accent">'Code'</span>,
             </div>
             <div className="text-accent-secondary text-xs">&#125;;</div>
-          </div>
-        </motion.div>
-
-        {/* Bottom left decorative element for mobile */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 1.7 }}
-          className="absolute bottom-16 left-2 sm:left-4 font-jetbrains text-muted-foreground/60 text-xs backdrop-blur-sm bg-background/30 p-2 sm:p-3 rounded-lg border border-accent-secondary/20 max-w-[180px] sm:max-w-xs"
-        >
-          <div className="space-y-1">
-            <div className="text-muted-foreground text-xs">
-              // Future builder
-            </div>
-            <div className="text-accent-secondary text-xs">
-              console.log(<span className="text-accent">'Hello!'</span>);
-            </div>
           </div>
         </motion.div>
       </div>

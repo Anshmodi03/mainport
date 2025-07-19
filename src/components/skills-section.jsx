@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Code2,
   Palette,
@@ -11,15 +9,15 @@ import {
   Smartphone,
   Sparkles,
   Zap,
+  Star,
+  Award,
+  TrendingUp,
 } from "lucide-react";
 import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
-
-gsap.registerPlugin(ScrollTrigger);
 
 export default function SkillsSection() {
   const { ref, isVisible } = useScrollAnimation();
   const [activeCategory, setActiveCategory] = useState("frontend");
-  const skillsRef = useRef(null);
 
   const skillCategories = {
     frontend: {
@@ -31,39 +29,57 @@ export default function SkillsSection() {
       skills: [
         {
           name: "React",
-          level: 95,
           icon: "⚛️",
           color: "from-blue-400 to-cyan-400",
+          proficiency: "Expert",
+          years: "2+ years",
+          description: "Advanced hooks, context, and state management",
+          tags: ["Hooks", "Context", "Redux"],
         },
         {
           name: "Next.js",
-          level: 90,
           icon: "🔥",
           color: "from-purple-400 to-blue-400",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "SSR, SSG, API routes, and performance optimization",
+          tags: ["SSR", "API Routes", "Performance"],
         },
         {
           name: "TypeScript",
-          level: 88,
           icon: "📘",
           color: "from-blue-500 to-indigo-500",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "Type safety, interfaces, and advanced patterns",
+          tags: ["Types", "Interfaces", "Generics"],
         },
         {
           name: "Tailwind CSS",
-          level: 92,
           icon: "🎨",
           color: "from-cyan-400 to-teal-400",
+          proficiency: "Expert",
+          years: "2+ years",
+          description: "Responsive design and custom component styling",
+          tags: ["Responsive", "Components", "Utilities"],
         },
         {
           name: "Three.js",
-          level: 85,
           icon: "🎮",
           color: "from-purple-500 to-pink-500",
+          proficiency: "Intermediate",
+          years: "6 months",
+          description: "3D graphics, animations, and interactive experiences",
+          tags: ["3D", "WebGL", "Animation"],
         },
         {
           name: "Framer Motion",
-          level: 87,
           icon: "✨",
           color: "from-indigo-400 to-purple-400",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "Complex animations and gesture-based interactions",
+          tags: ["Animation", "Gestures", "Transitions"],
         },
       ],
     },
@@ -76,39 +92,57 @@ export default function SkillsSection() {
       skills: [
         {
           name: "Node.js",
-          level: 85,
           icon: "🟢",
           color: "from-green-400 to-emerald-400",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "Server-side JavaScript and async programming",
+          tags: ["Express", "Async", "APIs"],
         },
         {
           name: "Express.js",
-          level: 82,
           icon: "🚀",
           color: "from-emerald-500 to-green-500",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "RESTful APIs, middleware, and authentication",
+          tags: ["REST", "Middleware", "Auth"],
         },
         {
           name: "PostgreSQL",
-          level: 80,
           icon: "🐘",
           color: "from-blue-500 to-blue-600",
+          proficiency: "Intermediate",
+          years: "6 months",
+          description: "Complex queries, relationships, and optimization",
+          tags: ["SQL", "Relations", "Optimization"],
         },
         {
           name: "MongoDB",
-          level: 78,
           icon: "🍃",
           color: "from-green-500 to-lime-500",
+          proficiency: "Intermediate",
+          years: "8 months",
+          description: "NoSQL database design and aggregation pipelines",
+          tags: ["NoSQL", "Aggregation", "Indexing"],
         },
         {
           name: "GraphQL",
-          level: 75,
           icon: "📊",
           color: "from-pink-500 to-rose-500",
+          proficiency: "Beginner",
+          years: "3 months",
+          description: "Query language and schema design",
+          tags: ["Queries", "Schema", "Resolvers"],
         },
         {
           name: "REST APIs",
-          level: 88,
           icon: "🔌",
           color: "from-teal-400 to-cyan-400",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "API design, documentation, and best practices",
+          tags: ["Design", "Documentation", "Testing"],
         },
       ],
     },
@@ -121,39 +155,57 @@ export default function SkillsSection() {
       skills: [
         {
           name: "Figma",
-          level: 90,
           icon: "🎯",
           color: "from-purple-400 to-pink-400",
+          proficiency: "Expert",
+          years: "2+ years",
+          description: "UI/UX design, prototyping, and design systems",
+          tags: ["Prototyping", "Components", "Design Systems"],
         },
         {
           name: "Adobe XD",
-          level: 85,
           icon: "🔷",
           color: "from-blue-500 to-purple-500",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "Interactive prototypes and user flows",
+          tags: ["Prototypes", "User Flows", "Interactions"],
         },
         {
           name: "Photoshop",
-          level: 80,
           icon: "🖼️",
           color: "from-blue-600 to-indigo-600",
+          proficiency: "Intermediate",
+          years: "1+ years",
+          description: "Photo editing and digital art creation",
+          tags: ["Photo Editing", "Digital Art", "Compositing"],
         },
         {
           name: "Blender",
-          level: 75,
           icon: "🎭",
           color: "from-orange-500 to-yellow-500",
+          proficiency: "Beginner",
+          years: "4 months",
+          description: "3D modeling and rendering for web projects",
+          tags: ["3D Modeling", "Rendering", "Animation"],
         },
         {
           name: "UI/UX Design",
-          level: 88,
           icon: "✨",
           color: "from-pink-400 to-rose-400",
+          proficiency: "Advanced",
+          years: "2+ years",
+          description: "User research, wireframing, and usability testing",
+          tags: ["User Research", "Wireframing", "Testing"],
         },
         {
           name: "Prototyping",
-          level: 87,
           icon: "🔧",
           color: "from-indigo-500 to-purple-500",
+          proficiency: "Advanced",
+          years: "1+ years",
+          description: "Interactive prototypes and user testing",
+          tags: ["Interactive", "User Testing", "Iteration"],
         },
       ],
     },
@@ -166,39 +218,57 @@ export default function SkillsSection() {
       skills: [
         {
           name: "React Native",
-          level: 80,
           icon: "📱",
           color: "from-blue-400 to-cyan-400",
+          proficiency: "Intermediate",
+          years: "8 months",
+          description: "Cross-platform mobile app development",
+          tags: ["Cross-platform", "Navigation", "Native APIs"],
         },
         {
           name: "Flutter",
-          level: 70,
           icon: "🦋",
           color: "from-blue-500 to-blue-600",
+          proficiency: "Beginner",
+          years: "3 months",
+          description: "Dart language and widget-based development",
+          tags: ["Dart", "Widgets", "State Management"],
         },
         {
           name: "Git & GitHub",
-          level: 92,
           icon: "🐙",
           color: "from-gray-600 to-gray-700",
+          proficiency: "Expert",
+          years: "2+ years",
+          description: "Version control, branching, and collaboration",
+          tags: ["Branching", "Merging", "Collaboration"],
         },
         {
           name: "Docker",
-          level: 75,
           icon: "🐳",
           color: "from-blue-500 to-cyan-500",
+          proficiency: "Beginner",
+          years: "4 months",
+          description: "Containerization and deployment workflows",
+          tags: ["Containers", "Images", "Orchestration"],
         },
         {
           name: "AWS",
-          level: 72,
           icon: "☁️",
           color: "from-orange-400 to-yellow-400",
+          proficiency: "Beginner",
+          years: "3 months",
+          description: "Cloud services and deployment infrastructure",
+          tags: ["EC2", "S3", "Lambda"],
         },
         {
           name: "Linux",
-          level: 85,
           icon: "🐧",
           color: "from-yellow-500 to-orange-500",
+          proficiency: "Intermediate",
+          years: "1+ years",
+          description: "Command line, system administration, and scripting",
+          tags: ["Command Line", "Bash", "System Admin"],
         },
       ],
     },
@@ -209,32 +279,69 @@ export default function SkillsSection() {
       name: "Machine Learning",
       icon: "🤖",
       color: "from-violet-500 to-purple-500",
+      status: "Learning",
     },
-    { name: "Blockchain", icon: "⛓️", color: "from-yellow-500 to-orange-500" },
-    { name: "AR/VR", icon: "🥽", color: "from-cyan-500 to-blue-500" },
-    { name: "DevOps", icon: "🚀", color: "from-green-500 to-teal-500" },
-    { name: "Cybersecurity", icon: "🔐", color: "from-red-500 to-rose-500" },
+    {
+      name: "Blockchain",
+      icon: "⛓️",
+      color: "from-yellow-500 to-orange-500",
+      status: "Exploring",
+    },
+    {
+      name: "AR/VR",
+      icon: "🥽",
+      color: "from-cyan-500 to-blue-500",
+      status: "Interested",
+    },
+    {
+      name: "DevOps",
+      icon: "🚀",
+      color: "from-green-500 to-teal-500",
+      status: "Learning",
+    },
+    {
+      name: "Cybersecurity",
+      icon: "🔐",
+      color: "from-red-500 to-rose-500",
+      status: "Exploring",
+    },
     {
       name: "Game Development",
       icon: "🎮",
       color: "from-purple-500 to-pink-500",
+      status: "Interested",
     },
   ];
 
-  useEffect(() => {
-    if (isVisible && skillsRef.current) {
-      const skillBars = skillsRef.current.querySelectorAll(".skill-bar");
-      skillBars.forEach((bar, index) => {
-        const skillLevel = skillCategories[activeCategory].skills[index].level;
-        const fillElement = bar.querySelector(".skills-fill");
-        if (fillElement) {
-          setTimeout(() => {
-            fillElement.style.transform = `scaleX(${skillLevel / 100})`;
-          }, index * 100);
-        }
-      });
+  const getProficiencyColor = (proficiency) => {
+    switch (proficiency) {
+      case "Expert":
+        return "text-green-400 bg-green-400/20 border-green-400/30";
+      case "Advanced":
+        return "text-blue-400 bg-blue-400/20 border-blue-400/30";
+      case "Intermediate":
+        return "text-yellow-400 bg-yellow-400/20 border-yellow-400/30";
+      case "Beginner":
+        return "text-orange-400 bg-orange-400/20 border-orange-400/30";
+      default:
+        return "text-gray-400 bg-gray-400/20 border-gray-400/30";
     }
-  }, [isVisible, activeCategory]);
+  };
+
+  const getProficiencyIcon = (proficiency) => {
+    switch (proficiency) {
+      case "Expert":
+        return <Award className="w-4 h-4" />;
+      case "Advanced":
+        return <Star className="w-4 h-4" />;
+      case "Intermediate":
+        return <TrendingUp className="w-4 h-4" />;
+      case "Beginner":
+        return <Zap className="w-4 h-4" />;
+      default:
+        return <Zap className="w-4 h-4" />;
+    }
+  };
 
   return (
     <section
@@ -242,13 +349,10 @@ export default function SkillsSection() {
       className="py-20 relative overflow-hidden"
       style={{ zIndex: 25 }}
     >
-      <div className="parallax-bg" />
-
-      {/* Enhanced floating elements */}
+      {/* Simplified floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl" />
+        <div className="absolute top-32 right-20 w-36 h-36 bg-accent/90 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/90 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div
@@ -300,7 +404,7 @@ export default function SkillsSection() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Category Navigation */}
+        {/* Category Navigation */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
@@ -314,7 +418,7 @@ export default function SkillsSection() {
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               onClick={() => setActiveCategory(key)}
-              className={`px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 hover-lift relative group ${
+              className={`px-8 py-4 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-3 relative group ${
                 activeCategory === key
                   ? `bg-gradient-to-r ${category.color} ${category.borderColor} border backdrop-blur-sm shadow-lg shadow-current/20`
                   : `bg-gray-800/50 text-gray-300 hover:bg-gray-700/50 border border-gray-600/30 hover:border-gray-500/50`
@@ -332,20 +436,16 @@ export default function SkillsSection() {
               >
                 {category.title}
               </span>
-              {activeCategory === key && (
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-2xl" />
-              )}
             </motion.button>
           ))}
         </motion.div>
 
-        {/* Enhanced Skills Display */}
+        {/* Skills Display */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className={`relative rounded-3xl p-10 mb-16 bg-gradient-to-br from-gray-800/40 to-gray-900/40 backdrop-blur-sm border ${skillCategories[activeCategory].borderColor} shadow-2xl shadow-current/10`}
-          ref={skillsRef}
+          className={`relative rounded-3xl p-10 mb-16 bg-gradient-to-br from-gray-800/25 to-gray-900/25 backdrop-blur-sm border ${skillCategories[activeCategory].borderColor} shadow-2xl shadow-current/90`}
         >
           <div
             className={`absolute inset-0 bg-gradient-to-br ${skillCategories[activeCategory].color} rounded-3xl opacity-30`}
@@ -358,35 +458,65 @@ export default function SkillsSection() {
                   initial={{ opacity: 0, x: -30 }}
                   animate={isVisible ? { opacity: 1, x: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                  className="space-y-4"
+                  className="group relative bg-gray-800/40 backdrop-blur-sm rounded-2xl p-6 border border-gray-600/30 hover:border-gray-500/50 transition-all duration-300 hover:transform hover:scale-105"
                 >
-                  <div className="flex items-center justify-between">
+                  {/* Skill Header */}
+                  <div className="flex items-start justify-between mb-4">
                     <div className="flex items-center space-x-3">
-                      <span className="text-2xl">{skill.icon}</span>
-                      <h4 className="text-lg font-semibold text-white">
-                        {skill.name}
-                      </h4>
+                      <div
+                        className={`p-2 rounded-xl bg-gradient-to-r ${skill.color} bg-opacity-20`}
+                      >
+                        <span className="text-2xl">{skill.icon}</span>
+                      </div>
+                      <div>
+                        <h4 className="text-lg font-semibold text-white mb-1">
+                          {skill.name}
+                        </h4>
+                        <div className="flex items-center space-x-2">
+                          <span
+                            className={`px-2 py-1 rounded-lg text-xs font-medium border flex items-center space-x-1 ${getProficiencyColor(
+                              skill.proficiency
+                            )}`}
+                          >
+                            {getProficiencyIcon(skill.proficiency)}
+                            <span>{skill.proficiency}</span>
+                          </span>
+                          <span className="text-xs text-gray-400">
+                            {skill.years}
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <span
-                      className={`font-bold text-lg ${skillCategories[activeCategory].accentColor}`}
-                    >
-                      {skill.level}%
-                    </span>
                   </div>
-                  <div className="skill-bar skills-bar relative bg-gray-700/50 rounded-xl h-3 overflow-hidden">
-                    <div
-                      className={`skills-fill absolute top-0 left-0 h-full bg-gradient-to-r ${skill.color} rounded-xl transform origin-left scale-x-0 transition-transform duration-1000 ease-out shadow-lg`}
-                      style={{ width: "100%" }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent rounded-xl" />
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-300 mb-4 leading-relaxed">
+                    {skill.description}
+                  </p>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2">
+                    {skill.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-2 py-1 text-xs bg-gray-700/50 text-gray-300 rounded-lg border border-gray-600/30 hover:border-gray-500/50 transition-colors"
+                      >
+                        {tag}
+                      </span>
+                    ))}
                   </div>
+
+                  {/* Gradient overlay on hover */}
+                  <div
+                    className={`absolute inset-0 bg-gradient-to-r ${skill.color} opacity-0 group-hover:opacity-5 rounded-2xl transition-opacity duration-300 pointer-events-none`}
+                  />
                 </motion.div>
               ))}
             </div>
           </div>
         </motion.div>
 
-        {/* Enhanced Other Skills */}
+        {/* Other Skills */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
@@ -403,16 +533,21 @@ export default function SkillsSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={isVisible ? { opacity: 1, scale: 1 } : {}}
                 transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
-                className="group relative hover-lift"
+                className="group relative"
               >
                 <div
-                  className={`absolute inset-0 bg-gradient-to-r ${skill.color} rounded-full opacity-20 group-hover:opacity-30 transition-opacity blur-xl`}
+                  className={`absolute inset-0 bg-gradient-to-r ${skill.color} rounded-2xl opacity-20 group-hover:opacity-30 transition-opacity blur-xl`}
                 />
-                <div className="relative bg-gray-800/60 backdrop-blur-sm rounded-full px-8 py-4 border border-gray-600/30 group-hover:border-gray-500/50 transition-all">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-2xl">{skill.icon}</span>
-                    <span className="text-base font-medium text-gray-200 group-hover:text-white transition-colors">
-                      {skill.name}
+                <div className="relative bg-gray-800/40 backdrop-blur-sm rounded-2xl px-6 py-4 border border-gray-600/30 group-hover:border-gray-500/50 transition-all">
+                  <div className="flex items-center justify-between space-x-3">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-2xl">{skill.icon}</span>
+                      <span className="text-base font-medium text-gray-200 group-hover:text-white transition-colors">
+                        {skill.name}
+                      </span>
+                    </div>
+                    <span className="text-xs px-2 py-1 bg-gray-700/50 text-gray-400 rounded-lg">
+                      {skill.status}
                     </span>
                   </div>
                 </div>

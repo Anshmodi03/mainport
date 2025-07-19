@@ -79,13 +79,10 @@ export default function ContactSection() {
 
   return (
     <section id="contact" className="py-20 relative overflow-hidden">
-      <div className="parallax-bg" />
-
-      {/* Enhanced floating elements */}
+      {/* Simplified floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-32 left-20 w-36 h-36 bg-accent/8 rounded-full blur-3xl" />
-        <div className="floating-element-fast absolute bottom-32 right-20 w-44 h-44 bg-accent-secondary/8 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/10 to-accent-secondary/10 rounded-full blur-xl" />
+        <div className="absolute top-32 left-20 w-36 h-36 bg-accent/8 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-32 right-20 w-44 h-44 bg-accent-secondary/8 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
@@ -112,7 +109,7 @@ export default function ContactSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 text-shadow-glow bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
           >
             Let's Connect
           </motion.h2>
@@ -130,7 +127,7 @@ export default function ContactSection() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Why Work With Me Section */}
+        {/* Why Work With Me Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
@@ -147,7 +144,7 @@ export default function ContactSection() {
                 initial={{ opacity: 0, y: 30 }}
                 animate={isVisible ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                className="glass-effect rounded-2xl p-8 text-center hover-lift magnetic-effect bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
+                className="rounded-2xl p-8 text-center bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20 hover:border-accent/40 transition-all duration-300"
               >
                 <reason.icon
                   className={`w-10 h-10 ${reason.color} mx-auto mb-4`}
@@ -161,13 +158,13 @@ export default function ContactSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Enhanced Contact Form */}
+          {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isVisible ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <div className="glow-border rounded-3xl p-10 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm">
+            <div className="rounded-3xl p-10 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20">
               <h3 className="text-3xl font-bold font-space text-accent mb-8 flex items-center">
                 <MessageCircle className="w-8 h-8 mr-3" />
                 Send a Message
@@ -266,7 +263,7 @@ export default function ContactSection() {
                 >
                   <Button
                     type="submit"
-                    className="w-full liquid-button px-8 py-6 text-white rounded-xl font-medium transition-all duration-300 transform hover:scale-105 text-lg"
+                    className="w-full px-8 py-6 text-white rounded-xl font-medium bg-gradient-to-r from-accent to-accent-secondary hover:from-accent/90 hover:to-accent-secondary/90 transition-all duration-300 transform hover:scale-105 text-lg"
                   >
                     <Send className="w-6 h-6 mr-3" />
                     Send Message
@@ -276,14 +273,14 @@ export default function ContactSection() {
             </div>
           </motion.div>
 
-          {/* Enhanced Contact Info */}
+          {/* Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={isVisible ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
             className="space-y-8"
           >
-            <div className="glow-border rounded-3xl p-10 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm">
+            <div className="rounded-3xl p-10 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20">
               <h3 className="text-3xl font-bold font-space text-accent-secondary mb-6">
                 Get in Touch
               </h3>
@@ -335,7 +332,7 @@ export default function ContactSection() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={isVisible ? { opacity: 1, x: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
-                    className="flex items-center space-x-4 text-foreground hover:text-accent transition-all duration-300 group magnetic-effect p-4 rounded-2xl hover:bg-accent/5"
+                    className="flex items-center space-x-4 text-foreground hover:text-accent transition-all duration-300 group p-4 rounded-2xl hover:bg-accent/5"
                     onMouseEnter={() => setHoveredSocial(index)}
                     onMouseLeave={() => setHoveredSocial(null)}
                   >
@@ -364,7 +361,7 @@ export default function ContactSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="glow-border rounded-3xl p-10 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+              className="rounded-3xl p-10 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
             >
               <div className="relative">
                 <img
@@ -394,7 +391,7 @@ export default function ContactSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
-              className="glass-effect rounded-3xl p-8 text-center bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
+              className="rounded-3xl p-8 text-center bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
             >
               <h4 className="text-2xl font-bold font-space gradient-text-secondary mb-4">
                 Thank You for Visiting!

@@ -1,7 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   ExternalLink,
   Github,
@@ -25,107 +23,9 @@ import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
 import { Button } from "./ui/button.jsx";
 import { Badge } from "./ui/badge.jsx";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function ProjectsSection() {
-  const { ref, isVisible } = useScrollAnimation(0.1);
+  const { ref, isVisible } = useScrollAnimation();
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [hoveredProject, setHoveredProject] = useState(null);
-  const projectCardsRef = useRef([]);
-  const projectImageRef = useRef([]);
-  const filterRef = useRef(null);
-
-  useEffect(() => {
-    // Enhanced project cards animation
-    projectCardsRef.current.forEach((card, index) => {
-      if (card) {
-        // Entrance animation
-        gsap.fromTo(
-          card,
-          {
-            opacity: 0,
-            y: 100,
-            rotateX: 30,
-            scale: 0.8,
-          },
-          {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            scale: 1,
-            duration: 0.8,
-            ease: "power2.out",
-            delay: index * 0.2,
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none reverse",
-            },
-          }
-        );
-
-        // Hover effects
-        const handleMouseEnter = () => {
-          gsap.to(card, {
-            y: -15,
-            scale: 1.03,
-            rotateX: 5,
-            rotateY: 5,
-            duration: 0.4,
-            ease: "power2.out",
-          });
-        };
-
-        const handleMouseLeave = () => {
-          gsap.to(card, {
-            y: 0,
-            scale: 1,
-            rotateX: 0,
-            rotateY: 0,
-            duration: 0.4,
-            ease: "power2.out",
-          });
-        };
-
-        card.addEventListener("mouseenter", handleMouseEnter);
-        card.addEventListener("mouseleave", handleMouseLeave);
-
-        // Image reveal animation
-        const img = projectImageRef.current[index];
-        if (img) {
-          ScrollTrigger.create({
-            trigger: card,
-            start: "top 85%",
-            onEnter: () => {
-              gsap.fromTo(
-                img,
-                {
-                  clipPath: "polygon(0 0, 0 0, 0 100%, 0% 100%)",
-                  scale: 1.2,
-                },
-                {
-                  clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
-                  scale: 1,
-                  duration: 1.5,
-                  ease: "power2.out",
-                }
-              );
-            },
-          });
-        }
-
-        // Cleanup
-        return () => {
-          card.removeEventListener("mouseenter", handleMouseEnter);
-          card.removeEventListener("mouseleave", handleMouseLeave);
-        };
-      }
-    });
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
 
   const categories = [
     "All",
@@ -159,7 +59,6 @@ export default function ProjectsSection() {
       status: "Active",
       impact: "Used by 100+ developers worldwide",
       featured: true,
-      color: "from-accent/30 to-accent-secondary/30",
     },
     {
       id: 2,
@@ -177,7 +76,6 @@ export default function ProjectsSection() {
       status: "Active",
       impact: "Featured in 3D development showcases",
       featured: true,
-      color: "from-accent-secondary/30 to-accent/30",
     },
     {
       id: 3,
@@ -195,7 +93,6 @@ export default function ProjectsSection() {
       status: "Complete",
       impact: "Processing 500+ orders monthly",
       featured: false,
-      color: "from-accent/20 to-accent-secondary/20",
     },
   ];
 
@@ -256,28 +153,10 @@ export default function ProjectsSection() {
 
   return (
     <section id="projects" className="py-20 relative overflow-hidden">
-      <div
-        className="parallax-bg absolute inset-0 bg-gradient-to-br from-background/50 via-background-secondary/30 to-background/50"
-        data-speed="0.2"
-      />
-
-      {/* Enhanced floating elements with parallax */}
+      {/* Simplified floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="floating-element-slow absolute top-32 right-20 w-36 h-36 bg-accent/10 rounded-full blur-3xl parallax-element"
-          data-speed="0.3"
-          data-intensity="40"
-        />
-        <div
-          className="floating-element-fast absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/10 rounded-full blur-3xl parallax-element"
-          data-speed="0.4"
-          data-intensity="50"
-        />
-        <div
-          className="floating-element absolute top-1/4 right-1/3 w-28 h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full parallax-element"
-          data-speed="0.25"
-          data-intensity="30 blur-xl"
-        />
+        <div className="absolute top-32 right-20 w-36 h-36 bg-accent/90 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-32 left-20 w-44 h-44 bg-accent-secondary/90 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div
@@ -336,7 +215,6 @@ export default function ProjectsSection() {
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex flex-wrap justify-center gap-4 mb-16"
-          ref={filterRef}
         >
           {categories.map((category, index) => (
             <motion.button
@@ -345,10 +223,10 @@ export default function ProjectsSection() {
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.5, delay: 0.4 + index * 0.1 }}
               onClick={() => setSelectedCategory(category)}
-              className={`px-6 py-3 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-2 hover-lift ${
+              className={`px-6 py-3 rounded-2xl font-medium transition-all duration-300 flex items-center space-x-2 ${
                 selectedCategory === category
                   ? "bg-gradient-to-r from-accent/30 to-accent-secondary/30 text-accent border-2 border-accent/50 shadow-lg"
-                  : "bg-background/50 text-muted-foreground hover:text-accent hover:bg-accent/10 border-2 border-accent/20"
+                  : "bg-background/50 text-muted-foreground hover:text-accent hover:bg-accent/90 border-2 border-accent/20"
               }`}
             >
               <Filter className="w-4 h-4" />
@@ -370,20 +248,16 @@ export default function ProjectsSection() {
             {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
-                ref={(el) => (projectCardsRef.current[index] = el)}
                 initial={{ opacity: 0, y: 50 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.2 }}
-                className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-background/60 to-background-secondary/60 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-500"
-                onMouseEnter={() => setHoveredProject(project.id)}
-                onMouseLeave={() => setHoveredProject(null)}
+                className="group relative rounded-3xl overflow-hidden bg-gradient-to-br from-background/40 to-background-secondary/40 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-500"
               >
                 {/* Project Image */}
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={project.image}
                     alt={project.title}
-                    ref={(el) => (projectImageRef.current[index] = el)}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/50 to-transparent" />
@@ -473,7 +347,7 @@ export default function ProjectsSection() {
                       <Badge
                         key={tech}
                         variant="outline"
-                        className="text-xs hover:bg-accent/10 hover:border-accent/50 transition-all hover:scale-105"
+                        className="text-xs hover:bg-accent/90 hover:border-accent/50 transition-all hover:scale-105"
                       >
                         {tech}
                       </Badge>
@@ -486,7 +360,7 @@ export default function ProjectsSection() {
                       variant="outline"
                       size="sm"
                       asChild
-                      className="flex-1 border-accent/30 hover:bg-accent/10"
+                      className="flex-1 border-accent/30 hover:bg-accent/90"
                     >
                       <a
                         href={project.github}
@@ -541,7 +415,7 @@ export default function ProjectsSection() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.5 + index * 0.1 }}
-                  className="group rounded-2xl p-8 bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm border border-accent/20 hover:border-accent/40 transition-all duration-300 hover-lift"
+                  className="group rounded-2xl p-8 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20 hover:border-accent/40 transition-all duration-300"
                 >
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-xl font-semibold font-space text-accent group-hover:text-accent-secondary transition-colors">
@@ -603,7 +477,7 @@ export default function ProjectsSection() {
           <Button
             variant="outline"
             size="lg"
-            className="px-12 py-6 border-2 border-accent/30 hover:bg-accent/10 rounded-2xl text-lg hover-lift"
+            className="px-12 py-6 border-2 border-accent/30 hover:bg-accent/90 rounded-2xl text-lg"
             asChild
           >
             <a

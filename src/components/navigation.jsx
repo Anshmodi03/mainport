@@ -293,7 +293,7 @@ const Navigation = memo(() => {
               </div>
 
               <div className="flex items-center">
-                <span className="text-2xl font-bold font-space bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
+                <span className="text-2xl font-bold font-space bg-gradient-to-r from-emerald-400 via-teal-500 to-cyan-600 bg-clip-text text-transparent">
                   Ansh Modi
                 </span>
                 <motion.div
@@ -308,99 +308,33 @@ const Navigation = memo(() => {
                   }}
                   className="ml-2"
                 >
-                  <Sparkles className="w-5 h-5 text-cyan-400" />
+                  <Sparkles className="w-5 h-5 bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent" />
                 </motion.div>
               </div>
             </motion.div>
 
-            {/* Desktop Navigation with Enhanced Design */}
-            <div className="hidden md:flex items-center space-x-1">
-              {navItems.map((item, index) => {
+            {/* Desktop Navigation - Clean Static Design */}
+            <div className="hidden md:flex items-center space-x-2">
+              {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
-                  <motion.button
+                  <button
                     key={item.id}
-                    variants={itemVariants}
-                    initial="hidden"
-                    animate="visible"
-                    transition={{ delay: 0.1 * index }}
                     onClick={() => scrollToSection(item.id)}
-                    className={`relative px-6 py-3 text-sm font-medium group rounded-2xl overflow-hidden ${
+                    className={`relative px-5 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 flex items-center space-x-2 ${
                       isActive
-                        ? "text-white shadow-2xl"
-                        : "text-gray-300 hover:text-white"
+                        ? "bg-white/15 text-white border border-white/20 backdrop-blur-sm shadow-lg"
+                        : "text-gray-300 hover:text-white hover:bg-white/10 border border-transparent hover:border-white/10"
                     }`}
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
                   >
-                    {/* Background gradient with smooth animation */}
-                    <motion.div
-                      className={`absolute inset-0 bg-gradient-to-r ${item.color} rounded-2xl`}
-                      initial={false}
-                      animate={{
-                        opacity: isActive ? 1 : 0,
-                        scale: isActive ? 1 : 0.9,
-                      }}
-                      whileHover={{ opacity: 0.8 }}
-                      transition={{
-                        duration: 0.2,
-                        ease: "easeOut",
-                      }}
-                    />
+                    <item.icon className="w-4 h-4" />
+                    <span>{item.label}</span>
 
-                    {/* Glass effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-white/10 backdrop-blur-sm rounded-2xl"
-                      initial={false}
-                      animate={{ opacity: isActive ? 1 : 0 }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                    />
-
-                    {/* Border glow */}
-                    <motion.div
-                      className="absolute inset-0 rounded-2xl border border-white/20"
-                      initial={false}
-                      animate={{
-                        opacity: isActive ? 1 : 0,
-                        boxShadow: isActive
-                          ? "0 0 20px rgba(255, 255, 255, 0.3)"
-                          : "0 0 0px rgba(255, 255, 255, 0)",
-                      }}
-                      whileHover={{ opacity: 1 }}
-                      transition={{ duration: 0.2 }}
-                    />
-
-                    <span className="relative z-10 flex items-center space-x-2">
-                      <motion.div
-                        animate={{ rotate: isActive ? 360 : 0 }}
-                        transition={{
-                          duration: 0.6,
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <item.icon className="w-4 h-4" />
-                      </motion.div>
-                      <span>{item.label}</span>
-                    </span>
-
-                    {/* Active indicator with smooth animation */}
-                    <AnimatePresence>
-                      {isActive && (
-                        <motion.div
-                          className="absolute bottom-1 left-1/2 w-2 h-2 bg-white rounded-full"
-                          style={{ x: "-50%" }}
-                          initial={{ scale: 0, opacity: 0 }}
-                          animate={{ scale: 1, opacity: 1 }}
-                          exit={{ scale: 0, opacity: 0 }}
-                          transition={{
-                            duration: 0.2,
-                            ease: "easeOut",
-                          }}
-                        />
-                      )}
-                    </AnimatePresence>
-                  </motion.button>
+                    {/* Simple active indicator */}
+                    {isActive && (
+                      <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-white rounded-full" />
+                    )}
+                  </button>
                 );
               })}
             </div>
@@ -453,7 +387,7 @@ const Navigation = memo(() => {
                 {/* Menu Header */}
                 <div className="px-6 py-4 border-b border-white/10">
                   <div className="flex items-center justify-between">
-                    <span className="text-lg font-semibold bg-gradient-to-r from-cyan-400 to-purple-600 bg-clip-text text-transparent">
+                    <span className="text-lg font-semibold bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-600 bg-clip-text text-transparent">
                       Navigation
                     </span>
                     <ChevronDown className="w-5 h-5 text-gray-400" />

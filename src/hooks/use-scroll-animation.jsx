@@ -1,32 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useInView } from "react-intersection-observer";
 
 export function useScrollAnimation(options = {}) {
-  const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef(null);
+  const { ref, inView } = useInView({
+    threshold: 0.1,
+    rootMargin: "50px",
+    triggerOnce: true,
+    ...options,
+  });
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-        rootMargin: "50px",
-        ...options,
-      }
-    );
-
-    const currentRef = ref.current;
-    if (currentRef) {
-      observer.observe(currentRef);
-    }
-
-    return () => {
-      if (currentRef) {
-        observer.unobserve(currentRef);
-      }
-    };
-  }, [options]);
-
-  return { ref, isVisible };
+  return { ref, isVisible: inView };
 }

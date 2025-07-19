@@ -1,7 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
   Briefcase,
   Calendar,
@@ -29,93 +27,9 @@ import {
 } from "lucide-react";
 import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
 
-gsap.registerPlugin(ScrollTrigger);
-
 export default function ExperienceSection() {
   const { ref, isVisible } = useScrollAnimation();
-  const [selectedExperience, setSelectedExperience] = useState(0);
   const [activeTab, setActiveTab] = useState("experience");
-  const experienceCardsRef = useRef([]);
-  const achievementsRef = useRef([]);
-  const headerRef = useRef(null);
-
-  useEffect(() => {
-    if (isVisible) {
-      // Enhanced parallax zoom animations for experience cards
-      experienceCardsRef.current.forEach((card, index) => {
-        if (card) {
-          gsap.fromTo(
-            card,
-            {
-              opacity: 0,
-              y: 80,
-              scale: 0.9,
-              rotateY: 15,
-            },
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              rotateY: 0,
-              duration: 1,
-              ease: "power3.out",
-              delay: index * 0.2,
-              scrollTrigger: {
-                trigger: card,
-                start: "top 85%",
-                toggleActions: "play none none reverse",
-              },
-            }
-          );
-
-          // Add parallax zoom effect
-          gsap.to(card, {
-            scale: 1.05,
-            y: -30,
-            ease: "none",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 80%",
-              end: "bottom 20%",
-              scrub: 1,
-              invalidateOnRefresh: true,
-            },
-          });
-        }
-      });
-
-      // Achievement cards animation
-      achievementsRef.current.forEach((achievement, index) => {
-        if (achievement) {
-          gsap.fromTo(
-            achievement,
-            {
-              opacity: 0,
-              x: index % 2 === 0 ? -50 : 50,
-              scale: 0.8,
-            },
-            {
-              opacity: 1,
-              x: 0,
-              scale: 1,
-              duration: 0.8,
-              ease: "back.out(1.7)",
-              delay: 0.5 + index * 0.1,
-              scrollTrigger: {
-                trigger: achievement,
-                start: "top 90%",
-                toggleActions: "play none none reverse",
-              },
-            }
-          );
-        }
-      });
-    }
-
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, [isVisible, selectedExperience]);
 
   const experiences = [
     {
@@ -151,7 +65,6 @@ export default function ExperienceSection() {
         "$2M revenue impact",
       ],
       icon: Rocket,
-      gradient: "from-cyan-500/30 via-blue-500/30 to-indigo-500/30",
       accentColor: "cyan-400",
       featured: true,
     },
@@ -186,7 +99,6 @@ export default function ExperienceSection() {
         "Zero critical bugs",
       ],
       icon: Code,
-      gradient: "from-purple-500/30 via-pink-500/30 to-rose-500/30",
       accentColor: "purple-400",
       featured: false,
     },
@@ -221,7 +133,6 @@ export default function ExperienceSection() {
         "100% project delivery",
       ],
       icon: Users,
-      gradient: "from-emerald-500/30 via-teal-500/30 to-cyan-500/30",
       accentColor: "emerald-400",
       featured: false,
     },
@@ -276,25 +187,10 @@ export default function ExperienceSection() {
       id="experience"
       className="py-12 sm:py-16 md:py-20 relative overflow-hidden"
     >
-      <div className="parallax-bg" />
-
-      {/* Enhanced floating elements with parallax zoom */}
+      {/* Simplified floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="parallax-zoom floating-element-slow absolute top-20 sm:top-32 right-4 sm:right-20 w-24 sm:w-36 h-24 sm:h-36 bg-accent/10 rounded-full blur-3xl"
-          data-zoom-speed="0.2"
-          data-move-speed="0.6"
-        />
-        <div
-          className="parallax-zoom floating-element-fast absolute bottom-20 sm:bottom-32 left-4 sm:left-20 w-28 sm:w-44 h-28 sm:h-44 bg-accent-secondary/10 rounded-full blur-3xl"
-          data-zoom-speed="0.18"
-          data-move-speed="0.5"
-        />
-        <div
-          className="parallax-zoom floating-element absolute top-1/4 right-1/3 w-20 sm:w-28 h-20 sm:h-28 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl"
-          data-zoom-speed="0.12"
-          data-move-speed="0.4"
-        />
+        <div className="absolute top-20 sm:top-32 right-4 sm:right-20 w-24 sm:w-36 h-24 sm:h-36 bg-accent/90 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 sm:bottom-32 left-4 sm:left-20 w-28 sm:w-44 h-28 sm:h-44 bg-accent-secondary/90 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div
@@ -307,7 +203,6 @@ export default function ExperienceSection() {
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-8 sm:mb-12 md:mb-16"
-          ref={headerRef}
         >
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -355,7 +250,7 @@ export default function ExperienceSection() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="flex justify-center mb-8 sm:mb-12 md:mb-16 px-4"
         >
-          <div className="flex bg-background/50 backdrop-blur-sm rounded-2xl p-1 sm:p-2 border border-accent/20 overflow-x-auto">
+          <div className="flex bg-background/30 backdrop-blur-sm rounded-2xl p-1 sm:p-2 border border-accent/20 overflow-x-auto">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
@@ -363,7 +258,7 @@ export default function ExperienceSection() {
                 className={`flex items-center space-x-1 sm:space-x-2 px-3 sm:px-6 py-2 sm:py-3 rounded-xl font-medium transition-all duration-300 whitespace-nowrap ${
                   activeTab === tab.id
                     ? "bg-gradient-to-r from-accent/30 to-accent-secondary/30 text-accent border border-accent/30"
-                    : "text-muted-foreground hover:text-accent hover:bg-accent/10"
+                    : "text-muted-foreground hover:text-accent hover:bg-accent/90"
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -383,17 +278,14 @@ export default function ExperienceSection() {
               exit={{ opacity: 0, y: -50 }}
               transition={{ duration: 0.6 }}
             >
-              {/* Experience Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16">
                 {experiences.map((experience, index) => (
                   <motion.div
                     key={experience.id}
-                    ref={(el) => (experienceCardsRef.current[index] = el)}
                     initial={{ opacity: 0, y: 50 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, delay: index * 0.2 }}
-                    className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-br from-background/60 to-background-secondary/60 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-500 hover-lift"
-                    onClick={() => setSelectedExperience(index)}
+                    className="group relative rounded-2xl sm:rounded-3xl overflow-hidden bg-gradient-to-br from-background/40 to-background-secondary/40 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-500"
                   >
                     {/* Status Badge */}
                     <div className="absolute top-3 sm:top-4 right-3 sm:right-4 z-10">
@@ -421,9 +313,7 @@ export default function ExperienceSection() {
                     <div className="p-4 sm:p-6 md:p-8">
                       {/* Header */}
                       <div className="flex items-start space-x-3 sm:space-x-4 mb-4 sm:mb-6">
-                        <div
-                          className={`w-12 sm:w-16 h-12 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-${experience.accentColor} to-accent-secondary flex items-center justify-center shadow-lg flex-shrink-0`}
-                        >
+                        <div className="w-12 sm:w-16 h-12 sm:h-16 rounded-xl sm:rounded-2xl bg-gradient-to-br from-accent to-accent-secondary flex items-center justify-center shadow-lg flex-shrink-0">
                           <experience.icon className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -517,11 +407,6 @@ export default function ExperienceSection() {
                         </button>
                       </div>
                     </div>
-
-                    {/* Hover Gradient Overlay */}
-                    <div
-                      className={`absolute inset-0 bg-gradient-to-br ${experience.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none`}
-                    />
                   </motion.div>
                 ))}
               </div>
@@ -540,11 +425,10 @@ export default function ExperienceSection() {
                 {achievements.map((achievement, index) => (
                   <motion.div
                     key={achievement.title}
-                    ref={(el) => (achievementsRef.current[index] = el)}
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="text-center p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300 hover-lift group"
+                    className="text-center p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300 group"
                   >
                     <div
                       className={`w-12 sm:w-16 h-12 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-xl sm:rounded-2xl bg-gradient-to-r ${achievement.color} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300`}
@@ -581,7 +465,7 @@ export default function ExperienceSection() {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
-                    className="text-center p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300 hover-lift group"
+                    className="text-center p-4 sm:p-6 md:p-8 rounded-2xl sm:rounded-3xl bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300 group"
                   >
                     <stat.icon className="w-8 sm:w-10 md:w-12 h-8 sm:h-10 md:h-12 text-accent mx-auto mb-3 sm:mb-4 group-hover:scale-110 transition-transform duration-300" />
                     <div className="text-2xl sm:text-3xl font-bold font-space gradient-text mb-2">
@@ -605,8 +489,7 @@ export default function ExperienceSection() {
           className="text-center mt-12 sm:mt-16 md:mt-20"
         >
           <div className="relative group max-w-4xl mx-auto">
-            <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-accent-secondary/20 to-accent/20 rounded-2xl sm:rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-            <div className="relative rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300">
+            <div className="relative rounded-2xl sm:rounded-3xl p-6 sm:p-8 lg:p-12 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border-2 border-accent/20 hover:border-accent/40 transition-all duration-300">
               <div className="w-12 sm:w-16 h-12 sm:h-16 bg-gradient-to-r from-accent to-accent-secondary rounded-xl sm:rounded-2xl flex items-center justify-center mx-auto mb-4 sm:mb-6 shadow-lg">
                 <Rocket className="w-6 sm:w-8 h-6 sm:h-8 text-white" />
               </div>
@@ -624,7 +507,6 @@ export default function ExperienceSection() {
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <button className="group relative px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-accent to-accent-secondary text-white font-semibold rounded-xl sm:rounded-2xl overflow-hidden transition-all duration-300 hover:scale-105 shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-r from-accent-secondary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="relative flex items-center justify-center space-x-2">
                     <ExternalLink className="w-4 sm:w-5 h-4 sm:h-5" />
                     <span className="text-sm sm:text-base">

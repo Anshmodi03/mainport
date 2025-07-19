@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import {
   Code2,
@@ -14,7 +14,6 @@ import { useScrollAnimation } from "../hooks/use-scroll-animation.jsx";
 
 export default function AboutSection() {
   const { ref, isVisible } = useScrollAnimation();
-  const statsRef = useRef(null);
 
   const stats = [
     { number: "40+", label: "Projects Completed", icon: Target },
@@ -42,7 +41,6 @@ export default function AboutSection() {
       description: "Node.js, Express, MongoDB",
       color: "from-accent-secondary/20 to-accent/20",
     },
-
     {
       name: "Problem Solving",
       icon: Target,
@@ -51,40 +49,12 @@ export default function AboutSection() {
     },
   ];
 
-  useEffect(() => {
-    if (isVisible && statsRef.current) {
-      const numbers = statsRef.current.querySelectorAll(".stat-number");
-      numbers.forEach((number, index) => {
-        const finalValue = stats[index].number;
-        const numericValue = parseInt(finalValue.replace(/\D/g, ""));
-        let currentValue = 0;
-        const increment = numericValue / 30;
-
-        const timer = setInterval(() => {
-          currentValue += increment;
-          if (currentValue >= numericValue) {
-            currentValue = numericValue;
-            clearInterval(timer);
-            number.textContent = finalValue; // Show final value exactly as defined
-          } else {
-            // For animation, replace only the numeric part while preserving structure
-            const animatedValue = Math.floor(currentValue);
-            number.textContent = finalValue.replace(/\d+/, animatedValue);
-          }
-        }, 50);
-      });
-    }
-  }, [isVisible, stats]);
-
   return (
     <section id="about" className="py-20 relative overflow-hidden">
-      <div className="parallax-bg" />
-
-      {/* Enhanced floating elements */}
+      {/* Simplified floating elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="floating-element-slow absolute top-32 right-20 w-28 h-28 bg-accent/10 rounded-full blur-2xl" />
-        <div className="floating-element-fast absolute bottom-32 left-20 w-36 h-36 bg-accent-secondary/10 rounded-full blur-3xl" />
-        <div className="floating-element absolute top-1/4 left-1/4 w-20 h-20 bg-gradient-to-r from-accent/15 to-accent-secondary/15 rounded-full blur-xl" />
+        <div className="absolute top-32 right-20 w-28 h-28 bg-accent/90 rounded-full blur-2xl animate-pulse" />
+        <div className="absolute bottom-32 left-20 w-36 h-36 bg-accent-secondary/90 rounded-full blur-3xl animate-pulse" />
       </div>
 
       <div
@@ -114,7 +84,7 @@ export default function AboutSection() {
             initial={{ opacity: 0, y: 20 }}
             animate={isVisible ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space modern-heading section-heading mb-6 text-shadow-glow bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold font-space mb-6 bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent"
           >
             About Me
           </motion.h2>
@@ -136,13 +106,12 @@ export default function AboutSection() {
           </motion.p>
         </motion.div>
 
-        {/* Enhanced Stats Section */}
+        {/* Stats Section */}
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           animate={isVisible ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20"
-          ref={statsRef}
         >
           {stats.map((stat, index) => (
             <motion.div
@@ -150,11 +119,11 @@ export default function AboutSection() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={isVisible ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-              className="text-center glow-border p-8 hover-lift rounded-2xl bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+              className="text-center p-8 rounded-2xl bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20 hover:border-accent/40 transition-all duration-300"
             >
               <stat.icon className="w-10 h-10 text-accent mx-auto mb-4" />
-              <div className="stat-number text-4xl font-bold font-space gradient-text mb-2">
-                0
+              <div className="text-4xl font-bold font-space gradient-text mb-2">
+                {stat.number}
               </div>
               <p className="text-sm text-muted-foreground font-medium">
                 {stat.label}
@@ -174,11 +143,11 @@ export default function AboutSection() {
               <img
                 src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&h=600"
                 alt="Modern coding workspace setup"
-                className="rounded-2xl shadow-2xl w-full h-auto object-cover hover-lift transition-all duration-500 group-hover:scale-105"
+                className="rounded-2xl shadow-2xl w-full h-auto object-cover transition-all duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-accent/30 via-transparent to-accent-secondary/20 rounded-2xl" />
               <div className="absolute bottom-6 left-6 right-6">
-                <div className="glass-effect rounded-xl p-4 border border-accent/30">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl p-4 border border-accent/30">
                   <div className="flex items-center space-x-3 text-sm font-jetbrains">
                     <Coffee className="w-5 h-5 text-black animate-pulse" />
                     <span className="text-black font-medium">
@@ -190,7 +159,7 @@ export default function AboutSection() {
               </div>
             </div>
 
-            {/* Enhanced Skills Grid */}
+            {/* Skills Grid */}
             <div className="grid grid-cols-2 gap-6">
               {skills.map((skill, index) => (
                 <motion.div
@@ -198,7 +167,7 @@ export default function AboutSection() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={isVisible ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                  className={`glass-effect rounded-2xl p-6 hover-lift magnetic-effect bg-gradient-to-br ${skill.color} border border-accent/20`}
+                  className={`rounded-2xl p-6 bg-gradient-to-br ${skill.color} border border-accent/20 hover:border-accent/40 transition-all duration-300`}
                 >
                   <skill.icon className="w-8 h-8 text-accent mb-3" />
                   <h4 className="font-semibold text-sm mb-2 text-foreground">
@@ -222,7 +191,7 @@ export default function AboutSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.6 }}
-              className="glow-border rounded-2xl p-8 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+              className="rounded-2xl p-8 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
             >
               <h3 className="text-2xl font-bold font-space text-accent mb-6 flex items-center">
                 <Code2 className="w-7 h-7 mr-3" />
@@ -252,7 +221,7 @@ export default function AboutSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 0.8 }}
-              className="glow-border rounded-2xl p-8 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+              className="rounded-2xl p-8 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
             >
               <h3 className="text-2xl font-bold font-space text-accent-secondary mb-6 flex items-center">
                 <Palette className="w-7 h-7 mr-3" />
@@ -284,7 +253,7 @@ export default function AboutSection() {
                 ].map((tech) => (
                   <span
                     key={tech}
-                    className="badge badge-secondary hover:scale-105 transition-transform"
+                    className="px-3 py-1 bg-accent/20 text-accent rounded-full text-sm border border-accent/30 hover:scale-105 transition-transform"
                   >
                     {tech}
                   </span>
@@ -296,7 +265,7 @@ export default function AboutSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={isVisible ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: 1.0 }}
-              className="glow-border rounded-2xl p-8 hover-lift bg-gradient-to-br from-background/50 to-background-secondary/50 backdrop-blur-sm"
+              className="rounded-2xl p-8 bg-gradient-to-br from-background/30 to-background-secondary/30 backdrop-blur-sm border border-accent/20"
             >
               <h3 className="text-2xl font-bold font-space gradient-text mb-6 flex items-center">
                 <Target className="w-7 h-7 mr-3" />
